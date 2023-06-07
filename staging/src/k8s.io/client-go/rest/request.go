@@ -1036,6 +1036,7 @@ func (r *Request) request(ctx context.Context, fn func(*http.Request, *http.Resp
 //   - http.Client.Do errors are returned directly.
 func (r *Request) Do(ctx context.Context) Result {
 	var result Result
+	fmt.Printf("\n[MYLOG] HTTP REQ:%s::%#v\n", r.namespace, r)
 	err := r.request(ctx, func(req *http.Request, resp *http.Response) {
 		result = r.transformResponse(resp, req)
 	})

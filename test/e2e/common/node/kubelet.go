@@ -78,6 +78,42 @@ var _ = SIGDescribe("Kubelet", func() {
 				return buf.String()
 			}, time.Minute, time.Second*4).Should(gomega.Equal("Hello World\n"))
 		})
+
+		/*
+			Release: v1.13
+			Testname: Kubelet, log output, default
+			Description: By default the stdout and stderr from the process being executed in a pod MUST be sent to the pod's logs.
+		*/
+		framework.ConformanceIt("extract conformance test", func(ctx context.Context) {
+			fmt.Printf("test logging by takurosato\n")
+			podClient.CreateSync(ctx, &v1.Pod{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: podName,
+				},
+				Spec: v1.PodSpec{
+					// Don't restart the Pod since it is expected to exit
+					RestartPolicy: v1.RestartPolicyNever,
+					Containers: []v1.Container{
+						{
+							Image:   framework.BusyBoxImage,
+							Name:    podName,
+							Command: []string{"sh", "-c", "echo 'Hello World' ; sleep 240"},
+						},
+					},
+				},
+			})
+			gomega.Eventually(ctx, func() string {
+				sinceTime := metav1.NewTime(time.Now().Add(time.Duration(-1 * time.Hour)))
+				rc, err := podClient.GetLogs(podName, &v1.PodLogOptions{SinceTime: &sinceTime}).Stream(ctx)
+				if err != nil {
+					return ""
+				}
+				defer rc.Close()
+				buf := new(bytes.Buffer)
+				buf.ReadFrom(rc)
+				return buf.String()
+			}, time.Minute, time.Second*4).Should(gomega.Equal("Hello World\n"))
+		})
 	})
 	ginkgo.Context("when scheduling a busybox command that always fails in a pod", func() {
 		var podName string
