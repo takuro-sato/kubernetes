@@ -42,7 +42,8 @@ var _ = SIGDescribe("Kubelet", func() {
 		podClient = e2epod.NewPodClient(f)
 	})
 	ginkgo.Context("when scheduling a busybox command in a pod", func() {
-		podName := "busybox-scheduling-" + string(uuid.NewUUID())
+		podName := "busybox-scheduling-" + framework.DeterministicPodSuffix("busybox-scheduling-")
+		podName2 := "busybox-scheduling-" + framework.DeterministicPodSuffix("busybox-scheduling-")
 
 		/*
 			Release: v1.13
@@ -88,7 +89,7 @@ var _ = SIGDescribe("Kubelet", func() {
 			fmt.Printf("test logging by takurosato\n")
 			podClient.CreateSync(ctx, &v1.Pod{
 				ObjectMeta: metav1.ObjectMeta{
-					Name: podName,
+					Name: podName2,
 				},
 				Spec: v1.PodSpec{
 					// Don't restart the Pod since it is expected to exit
@@ -96,7 +97,7 @@ var _ = SIGDescribe("Kubelet", func() {
 					Containers: []v1.Container{
 						{
 							Image:   framework.BusyBoxImage,
-							Name:    podName,
+							Name:    podName2,
 							Command: []string{"sh", "-c", "echo 'Hello World' ; sleep 240"},
 						},
 					},
@@ -104,7 +105,7 @@ var _ = SIGDescribe("Kubelet", func() {
 			})
 			gomega.Eventually(ctx, func() string {
 				sinceTime := metav1.NewTime(time.Now().Add(time.Duration(-1 * time.Hour)))
-				rc, err := podClient.GetLogs(podName, &v1.PodLogOptions{SinceTime: &sinceTime}).Stream(ctx)
+				rc, err := podClient.GetLogs(podName2, &v1.PodLogOptions{SinceTime: &sinceTime}).Stream(ctx)
 				if err != nil {
 					return ""
 				}
