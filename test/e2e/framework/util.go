@@ -336,10 +336,12 @@ func CreateTestingNS(ctx context.Context, baseName string, c clientset.Interface
 	}
 	labels["e2e-run"] = string(RunID)
 
+	labels["extract-policy"] = "1"
+
 	// We don't use ObjectMeta.GenerateName feature, as in case of API call
 	// failure we don't know whether the namespace was created and what is its
 	// name.
-	name := fmt.Sprintf("%v-%v", baseName, RandomSuffix())
+	name := fmt.Sprintf("%v-%v", baseName, DeterministicNsSuffix(baseName)) // editing
 
 	namespaceObj := &v1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
@@ -551,7 +553,7 @@ func DeterministicNsSuffix(prefix string) string {
 var podSuffixCounter = NewCounter()
 
 func DeterministicPodSuffix(prefix string) string {
-	return strconv.Itoa(nsSuffixCounter.Increment(prefix))
+	return strconv.Itoa(podSuffixCounter.Increment(prefix))
 }
 
 // StartCmdAndStreamOutput returns stdout and stderr after starting the given cmd.
