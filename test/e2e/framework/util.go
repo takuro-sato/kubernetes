@@ -556,6 +556,12 @@ func DeterministicPodSuffix(prefix string) string {
 	return strconv.Itoa(podSuffixCounter.Increment(prefix))
 }
 
+var TestCaseScopedIdCounter = NewCounter()
+
+func DeterministicTestCaseScopedId(prefix string) string {
+	return strconv.Itoa(TestCaseScopedIdCounter.Increment(prefix))
+}
+
 // StartCmdAndStreamOutput returns stdout and stderr after starting the given cmd.
 func StartCmdAndStreamOutput(cmd *exec.Cmd) (stdout, stderr io.ReadCloser, err error) {
 	stdout, err = cmd.StdoutPipe()
