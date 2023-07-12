@@ -823,7 +823,7 @@ func getRestartCount(p *v1.Pod) int {
 
 func testWebServerPodSpec(readinessProbe, livenessProbe *v1.Probe, containerName string, port int) *v1.Pod {
 	return &v1.Pod{
-		ObjectMeta: metav1.ObjectMeta{Name: "test-webserver-" + string(uuid.NewUUID())},
+		ObjectMeta: metav1.ObjectMeta{Name: "test-webserver-" + framework.DeterministicPodSuffix("testWebServerPodSpec"+"/"+"test-webserver-")},
 		Spec: v1.PodSpec{
 			Containers: []v1.Container{
 				{
@@ -842,7 +842,7 @@ func testWebServerPodSpec(readinessProbe, livenessProbe *v1.Probe, containerName
 func busyBoxPodSpec(readinessProbe, livenessProbe *v1.Probe, cmd []string) *v1.Pod {
 	return &v1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:   "busybox-" + string(uuid.NewUUID()),
+			Name:   "busybox-" + framework.DeterministicPodSuffix("busyBoxPodSpec"+"/"+"test-webserver-"),
 			Labels: map[string]string{"test": "liveness"},
 		},
 		Spec: v1.PodSpec{
@@ -860,7 +860,7 @@ func busyBoxPodSpec(readinessProbe, livenessProbe *v1.Probe, cmd []string) *v1.P
 }
 
 func livenessPodSpec(namespace string, readinessProbe, livenessProbe *v1.Probe) *v1.Pod {
-	pod := e2epod.NewAgnhostPod(namespace, "liveness-"+string(uuid.NewUUID()), nil, nil, nil, "liveness")
+	pod := e2epod.NewAgnhostPod(namespace, "liveness-"+framework.DeterministicPodSuffix("livenessPodSpec"+"/"+"liveness-"), nil, nil, nil, "liveness")
 	pod.ObjectMeta.Labels = map[string]string{"test": "liveness"}
 	pod.Spec.Containers[0].LivenessProbe = livenessProbe
 	pod.Spec.Containers[0].ReadinessProbe = readinessProbe
@@ -870,7 +870,7 @@ func livenessPodSpec(namespace string, readinessProbe, livenessProbe *v1.Probe) 
 func startupPodSpec(startupProbe, readinessProbe, livenessProbe *v1.Probe, cmd []string) *v1.Pod {
 	return &v1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:   "startup-" + string(uuid.NewUUID()),
+			Name:   "startup-" + framework.DeterministicPodSuffix("startupPodSpec"+"/"+"startup-"),
 			Labels: map[string]string{"test": "startup"},
 		},
 		Spec: v1.PodSpec{
@@ -1036,7 +1036,7 @@ func runReadinessFailTest(ctx context.Context, f *framework.Framework, pod *v1.P
 
 func gRPCServerPodSpec(readinessProbe, livenessProbe *v1.Probe, containerName string) *v1.Pod {
 	return &v1.Pod{
-		ObjectMeta: metav1.ObjectMeta{Name: "test-grpc-" + string(uuid.NewUUID())},
+		ObjectMeta: metav1.ObjectMeta{Name: "test-grpc-" + framework.DeterministicPodSuffix("gRPCServerPodSpec"+"/"+"test-grpc-")},
 		Spec: v1.PodSpec{
 			Containers: []v1.Container{
 				{

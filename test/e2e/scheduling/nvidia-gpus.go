@@ -26,7 +26,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	extensionsinternal "k8s.io/kubernetes/pkg/apis/extensions"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2edebug "k8s.io/kubernetes/test/e2e/framework/debug"
@@ -57,7 +56,7 @@ var (
 )
 
 func makeCudaAdditionDevicePluginTestPod() *v1.Pod {
-	podName := testPodNamePrefix + string(uuid.NewUUID())
+	podName := testPodNamePrefix + framework.DeterministicPodSuffix("makeCudaAdditionDevicePluginTestPod"+"/"+testPodNamePrefix)
 	testPod := &v1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: podName,

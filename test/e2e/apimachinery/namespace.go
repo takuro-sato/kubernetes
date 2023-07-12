@@ -31,7 +31,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/intstr"
 	utilrand "k8s.io/apimachinery/pkg/util/rand"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	clientscheme "k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/util/retry"
@@ -271,7 +270,7 @@ var _ = SIGDescribe("Namespaces [Serial]", func() {
 	*/
 	framework.ConformanceIt("should patch a Namespace", func(ctx context.Context) {
 		ginkgo.By("creating a Namespace")
-		namespaceName := "nspatchtest-" + string(uuid.NewUUID())
+		namespaceName := "nspatchtest-" + framework.DeterministicNsSuffix("nspatchtest-")
 		ns, err := f.CreateNamespace(ctx, namespaceName, nil)
 		framework.ExpectNoError(err, "failed creating Namespace")
 		namespaceName = ns.ObjectMeta.Name

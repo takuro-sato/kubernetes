@@ -26,7 +26,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	utilrand "k8s.io/apimachinery/pkg/util/rand"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/util/retry"
 	"k8s.io/kubernetes/test/e2e/framework"
@@ -42,6 +41,7 @@ const (
 )
 
 var _ = SIGDescribe("PodTemplates", func() {
+	const frameworkName = "podtemplate"
 	f := framework.NewDefaultFramework("podtemplate")
 	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
 	/*
@@ -52,7 +52,7 @@ var _ = SIGDescribe("PodTemplates", func() {
 	*/
 	framework.ConformanceIt("should run the lifecycle of PodTemplates", func(ctx context.Context) {
 		testNamespaceName := f.Namespace.Name
-		podTemplateName := "nginx-pod-template-" + string(uuid.NewUUID())
+		podTemplateName := "nginx-pod-template-" + framework.DeterministicPodSuffix(frameworkName+"/"+"nginx-pod-template-")
 
 		// get a list of PodTemplates (in all namespaces to hit endpoint)
 		podTemplateList, err := f.ClientSet.CoreV1().PodTemplates("").List(ctx, metav1.ListOptions{

@@ -135,6 +135,7 @@ func windowsCheck(address string) []string {
 
 func createTestPod(f *framework.Framework, image string, os string) *v1.Pod {
 	containerName := fmt.Sprintf("%s-container", os)
+	// MEMO: It's not used in conformance test
 	podName := "pod-" + string(uuid.NewUUID())
 	pod := &v1.Pod{
 		TypeMeta: metav1.TypeMeta{

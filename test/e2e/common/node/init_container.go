@@ -32,7 +32,6 @@ import (
 	"k8s.io/apimachinery/pkg/fields"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/tools/cache"
 	watchtools "k8s.io/client-go/tools/watch"
@@ -159,7 +158,8 @@ func initContainersInvariants(pod *v1.Pod) error {
 }
 
 var _ = SIGDescribe("InitContainer [NodeConformance]", func() {
-	f := framework.NewDefaultFramework("init-container")
+	const frameworkName = "init-container"
+	f := framework.NewDefaultFramework(frameworkName)
 	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelBaseline
 	var podClient *e2epod.PodClient
 	ginkgo.BeforeEach(func() {
@@ -176,7 +176,7 @@ var _ = SIGDescribe("InitContainer [NodeConformance]", func() {
 	*/
 	framework.ConformanceIt("should invoke init containers on a RestartNever pod", func(ctx context.Context) {
 		ginkgo.By("creating the pod")
-		name := "pod-init-" + string(uuid.NewUUID())
+		name := "pod-init-" + framework.DeterministicPodSuffix(frameworkName+"/"+"pod-init-")
 		value := strconv.Itoa(time.Now().Nanosecond())
 		pod := &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
@@ -254,7 +254,7 @@ var _ = SIGDescribe("InitContainer [NodeConformance]", func() {
 	*/
 	framework.ConformanceIt("should invoke init containers on a RestartAlways pod", func(ctx context.Context) {
 		ginkgo.By("creating the pod")
-		name := "pod-init-" + string(uuid.NewUUID())
+		name := "pod-init-" + framework.DeterministicPodSuffix(frameworkName+"/"+"pod-init-")
 		value := strconv.Itoa(time.Now().Nanosecond())
 		pod := &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
@@ -333,7 +333,7 @@ var _ = SIGDescribe("InitContainer [NodeConformance]", func() {
 	*/
 	framework.ConformanceIt("should not start app containers if init containers fail on a RestartAlways pod", func(ctx context.Context) {
 		ginkgo.By("creating the pod")
-		name := "pod-init-" + string(uuid.NewUUID())
+		name := "pod-init-" + framework.DeterministicPodSuffix(frameworkName+"/"+"pod-init-")
 		value := strconv.Itoa(time.Now().Nanosecond())
 
 		pod := &v1.Pod{
@@ -457,7 +457,7 @@ var _ = SIGDescribe("InitContainer [NodeConformance]", func() {
 	*/
 	framework.ConformanceIt("should not start app containers and fail the pod if init containers fail on a RestartNever pod", func(ctx context.Context) {
 		ginkgo.By("creating the pod")
-		name := "pod-init-" + string(uuid.NewUUID())
+		name := "pod-init-" + framework.DeterministicPodSuffix(frameworkName+"/"+"pod-init-")
 		value := strconv.Itoa(time.Now().Nanosecond())
 		pod := &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{

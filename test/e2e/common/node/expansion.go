@@ -21,7 +21,6 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2epod "k8s.io/kubernetes/test/e2e/framework/pod"
 	e2epodoutput "k8s.io/kubernetes/test/e2e/framework/pod/output"
@@ -384,7 +383,7 @@ func testPodFailSubpath(ctx context.Context, f *framework.Framework, pod *v1.Pod
 }
 
 func newPod(command []string, envVars []v1.EnvVar, mounts []v1.VolumeMount, volumes []v1.Volume) *v1.Pod {
-	podName := "var-expansion-" + string(uuid.NewUUID())
+	podName := "var-expansion-" + framework.DeterministicPodSuffix("var-expansion-")
 	return &v1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:   podName,

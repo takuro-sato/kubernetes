@@ -238,9 +238,10 @@ var _ = SIGDescribe("EmptyDir volumes", func() {
 			deletionGracePeriod        = int64(0)
 		)
 
+		const frameworkName = "emptydir"
 		pod := &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "pod-sharedvolume-" + string(uuid.NewUUID()),
+				Name: "pod-sharedvolume-" + framework.DeterministicPodSuffix(frameworkName+"/"+"pod-sharedvolume-"),
 			},
 			Spec: v1.PodSpec{
 				Volumes: []v1.Volume{
@@ -588,7 +589,8 @@ func formatMedium(medium v1.StorageMedium) string {
 // testPodWithVolume creates a Pod that runs as the given UID and with the given empty dir source mounted at the given path.
 // If the uid is 0, the Pod will run as its default user (root).
 func testPodWithVolume(uid int64, path string, source *v1.EmptyDirVolumeSource) *v1.Pod {
-	podName := "pod-" + string(uuid.NewUUID())
+	const frameworkName = "emptydir"
+	podName := "pod-" + framework.DeterministicPodSuffix(frameworkName+"/"+"pod-")
 	pod := &v1.Pod{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "Pod",

@@ -236,6 +236,7 @@ func newKubeletStatsTestPods(numPods int, image imageutils.Config, nodeName stri
 	var pods []*v1.Pod
 
 	for i := 0; i < numPods; i++ {
+		// MEMO: It's not used in conformance test
 		podName := "statscollectiontest-" + string(uuid.NewUUID())
 		pod := v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{

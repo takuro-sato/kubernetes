@@ -34,7 +34,8 @@ import (
 )
 
 var _ = SIGDescribe("Downward API", func() {
-	f := framework.NewDefaultFramework("downward-api")
+	const frameworkName = "downward-api"
+	f := framework.NewDefaultFramework("frameworkName")
 	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
 
 	/*
@@ -43,7 +44,7 @@ var _ = SIGDescribe("Downward API", func() {
 	   Description: Downward API MUST expose Pod and Container fields as environment variables. Specify Pod Name, namespace and IP as environment variable in the Pod Spec are visible at runtime in the container.
 	*/
 	framework.ConformanceIt("should provide pod name, namespace and IP address as env vars [NodeConformance]", func(ctx context.Context) {
-		podName := "downward-api-" + string(uuid.NewUUID())
+		podName := "downward-api-" + framework.DeterministicPodSuffix(frameworkName+"/"+"downward-api-")
 		env := []v1.EnvVar{
 			{
 				Name: "POD_NAME",
@@ -89,7 +90,7 @@ var _ = SIGDescribe("Downward API", func() {
 	   Description: Downward API MUST expose Pod and Container fields as environment variables. Specify host IP as environment variable in the Pod Spec are visible at runtime in the container.
 	*/
 	framework.ConformanceIt("should provide host IP as an env var [NodeConformance]", func(ctx context.Context) {
-		podName := "downward-api-" + string(uuid.NewUUID())
+		podName := "downward-api-" + framework.DeterministicPodSuffix(frameworkName+"/"+"downward-api-")
 		env := []v1.EnvVar{
 			{
 				Name: "HOST_IP",
@@ -110,7 +111,7 @@ var _ = SIGDescribe("Downward API", func() {
 	})
 
 	ginkgo.It("should provide host IP and pod IP as an env var if pod uses host network [LinuxOnly]", func(ctx context.Context) {
-		podName := "downward-api-" + string(uuid.NewUUID())
+		podName := "downward-api-" + framework.DeterministicPodSuffix(frameworkName+"/"+"downward-api-")
 		env := []v1.EnvVar{
 			{
 				Name: "HOST_IP",
@@ -165,7 +166,7 @@ var _ = SIGDescribe("Downward API", func() {
 	   Description: Downward API MUST expose CPU request and Memory request set through environment variables at runtime in the container.
 	*/
 	framework.ConformanceIt("should provide container's limits.cpu/memory and requests.cpu/memory as env vars [NodeConformance]", func(ctx context.Context) {
-		podName := "downward-api-" + string(uuid.NewUUID())
+		podName := "downward-api-" + framework.DeterministicPodSuffix(frameworkName+"/"+"downward-api-")
 		env := []v1.EnvVar{
 			{
 				Name: "CPU_LIMIT",
@@ -216,7 +217,7 @@ var _ = SIGDescribe("Downward API", func() {
 	   Description: Downward API MUST expose CPU request and Memory limits set through environment variables at runtime in the container.
 	*/
 	framework.ConformanceIt("should provide default limits.cpu/memory from node allocatable [NodeConformance]", func(ctx context.Context) {
-		podName := "downward-api-" + string(uuid.NewUUID())
+		podName := "downward-api-" + framework.DeterministicPodSuffix(frameworkName+"/"+"downward-api-")
 		env := []v1.EnvVar{
 			{
 				Name: "CPU_LIMIT",
@@ -266,7 +267,7 @@ var _ = SIGDescribe("Downward API", func() {
 	   Description: Downward API MUST expose Pod UID set through environment variables at runtime in the container.
 	*/
 	framework.ConformanceIt("should provide pod UID as env vars [NodeConformance]", func(ctx context.Context) {
-		podName := "downward-api-" + string(uuid.NewUUID())
+		podName := "downward-api-" + framework.DeterministicPodSuffix(frameworkName+"/"+"downward-api-")
 		env := []v1.EnvVar{
 			{
 				Name: "POD_UID",

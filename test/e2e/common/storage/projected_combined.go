@@ -22,7 +22,6 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2epodoutput "k8s.io/kubernetes/test/e2e/framework/pod/output"
 	imageutils "k8s.io/kubernetes/test/utils/image"
@@ -32,6 +31,7 @@ import (
 )
 
 var _ = SIGDescribe("Projected combined", func() {
+	const frameworkName = "projected"
 	f := framework.NewDefaultFramework("projected")
 	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelBaseline
 
@@ -43,9 +43,10 @@ var _ = SIGDescribe("Projected combined", func() {
 	*/
 	framework.ConformanceIt("should project all components that make up the projection API [Projection][NodeConformance]", func(ctx context.Context) {
 		var err error
-		podName := "projected-volume-" + string(uuid.NewUUID())
-		secretName := "secret-projected-all-test-volume-" + string(uuid.NewUUID())
-		configMapName := "configmap-projected-all-test-volume-" + string(uuid.NewUUID())
+		suffix := framework.DeterministicPodSuffix(frameworkName + "/" + "projected-volume-")
+		podName := "projected-volume-" + suffix
+		secretName := "secret-projected-all-test-volume-" + suffix
+		configMapName := "configmap-projected-all-test-volume-" + suffix
 		configMap := &v1.ConfigMap{
 			ObjectMeta: metav1.ObjectMeta{
 				Namespace: f.Namespace.Name,
