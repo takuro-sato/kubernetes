@@ -38,7 +38,6 @@ ENV FOCUS="\[Conformance\]" \
 
 ENTRYPOINT ginkgo --focus="$FOCUS" \
 	--skip="$SKIP" \
-	--seed=0 \
 	--nodes=$PARALLELISM \
 	--flakeAttempts=$FLAKE_ATTEMPTS \
 	/usr/local/bin/e2e_node.test \

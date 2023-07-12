@@ -38,7 +38,7 @@ func TestGetCmd(t *testing.T) {
 			},
 			expectArgs: []string{
 				"ginkgobin",
-				"--focus=", "--skip=", " --seed=0",
+				"--focus=", "--skip=",
 				"--noColor=true", "--timeout=24h", "testbin", "--",
 				"--disable-log-dump", "--repo-root=/kubernetes",
 				"--provider=", "--report-dir=", "--kubeconfig=",
