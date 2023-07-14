@@ -53,7 +53,7 @@ var _ = utils.SIGDescribe("PersistentVolumes [Feature:vsphere][Feature:ReclaimPo
 		framework.ExpectNoError(e2enode.WaitForAllNodesSchedulable(ctx, c, f.Timeouts.NodeSchedulable))
 	})
 
-	ginkgo.Describe("persistentvolumereclaim:vsphere [Feature:vsphere]", func() {
+	ginkgo.Describe("persistentvolumereclaim:vsphere [Feature:vsphere]", ginkgo.Ordered, func() {
 		ginkgo.BeforeEach(func(ctx context.Context) {
 			e2eskipper.SkipUnlessProviderIs("vsphere")
 			ginkgo.DeferCleanup(testCleanupVSpherePersistentVolumeReclaim, c, nodeInfo, ns, volumePath, pv, pvc)

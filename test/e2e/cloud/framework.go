@@ -20,5 +20,5 @@ import "github.com/onsi/ginkgo/v2"
 
 // SIGDescribe annotates the test with the SIG label.
 func SIGDescribe(text string, body func()) bool {
-	return ginkgo.Describe("[sig-cloud-provider] "+text, body)
+	return ginkgo.Describe("[sig-cloud-provider] "+text, ginkgo.Ordered, body)
 }

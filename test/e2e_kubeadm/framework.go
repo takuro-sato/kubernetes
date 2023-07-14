@@ -20,5 +20,5 @@ import "github.com/onsi/ginkgo/v2"
 
 // Describe annotates the test with the Kubeadm label.
 func Describe(text string, body func()) bool {
-	return ginkgo.Describe("[sig-cluster-lifecycle] [area-kubeadm] "+text, body)
+	return ginkgo.Describe("[sig-cluster-lifecycle] [area-kubeadm] "+text, ginkgo.Ordered, body)
 }

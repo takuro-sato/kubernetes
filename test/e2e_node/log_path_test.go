@@ -41,7 +41,7 @@ var _ = SIGDescribe("ContainerLogPath [NodeConformance]", func() {
 	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
 	var podClient *e2epod.PodClient
 
-	ginkgo.Describe("Pod with a container", func() {
+	ginkgo.Describe("Pod with a container", ginkgo.Ordered, func() {
 		ginkgo.Context("printed log to stdout", func() {
 			makeLogPod := func(podName, log string) *v1.Pod {
 				return &v1.Pod{

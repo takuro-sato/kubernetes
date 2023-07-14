@@ -84,7 +84,7 @@ var _ = common.SIGDescribe("Loadbalancing: L7", func() {
 	//
 	// Slow by design ~10m for each "It" block dominated by loadbalancer setup time
 	// TODO: write similar tests for nginx, haproxy and AWS Ingress.
-	ginkgo.Describe("GCE [Slow] [Feature:Ingress]", func() {
+	ginkgo.Describe("GCE [Slow] [Feature:Ingress]", ginkgo.Ordered, func() {
 		var gceController *gce.IngressController
 
 		// Platform specific setup
@@ -129,7 +129,7 @@ var _ = common.SIGDescribe("Loadbalancing: L7", func() {
 
 	})
 
-	ginkgo.Describe("GCE [Slow] [Feature:NEG]", func() {
+	ginkgo.Describe("GCE [Slow] [Feature:NEG]", ginkgo.Ordered, func() {
 		var gceController *gce.IngressController
 
 		// Platform specific setup

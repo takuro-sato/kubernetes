@@ -38,7 +38,7 @@ var _ = SIGDescribe("gpu Upgrade [Feature:GPUUpgrade]", func() {
 	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
 	testFrameworks := upgrades.CreateUpgradeFrameworks(upgradeTests)
 
-	ginkgo.Describe("master upgrade", func() {
+	ginkgo.Describe("master upgrade", ginkgo.Ordered, func() {
 		ginkgo.It("should NOT disrupt gpu pod [Feature:GPUMasterUpgrade]", func(ctx context.Context) {
 			upgCtx, err := common.GetUpgradeContext(f.ClientSet.Discovery())
 			framework.ExpectNoError(err)
@@ -51,7 +51,7 @@ var _ = SIGDescribe("gpu Upgrade [Feature:GPUUpgrade]", func() {
 			upgrades.RunUpgradeSuite(ctx, upgCtx, upgradeTests, testFrameworks, testSuite, upgrades.MasterUpgrade, upgradeFunc)
 		})
 	})
-	ginkgo.Describe("cluster upgrade", func() {
+	ginkgo.Describe("cluster upgrade", ginkgo.Ordered, func() {
 		ginkgo.It("should be able to run gpu pod after upgrade [Feature:GPUClusterUpgrade]", func(ctx context.Context) {
 			upgCtx, err := common.GetUpgradeContext(f.ClientSet.Discovery())
 			framework.ExpectNoError(err)
@@ -64,7 +64,7 @@ var _ = SIGDescribe("gpu Upgrade [Feature:GPUUpgrade]", func() {
 			upgrades.RunUpgradeSuite(ctx, upgCtx, upgradeTests, testFrameworks, testSuite, upgrades.ClusterUpgrade, upgradeFunc)
 		})
 	})
-	ginkgo.Describe("cluster downgrade", func() {
+	ginkgo.Describe("cluster downgrade", ginkgo.Ordered, func() {
 		ginkgo.It("should be able to run gpu pod after downgrade [Feature:GPUClusterDowngrade]", func(ctx context.Context) {
 			upgCtx, err := common.GetUpgradeContext(f.ClientSet.Discovery())
 			framework.ExpectNoError(err)

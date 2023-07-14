@@ -87,7 +87,7 @@ var _ = SIGDescribe("Kubectl logs", func() {
 		return strings.Split(strings.TrimRight(out, "\n"), "\n")
 	}
 
-	ginkgo.Describe("logs", func() {
+	ginkgo.Describe("logs", ginkgo.Ordered, func() {
 
 		podName := "logs-generator"
 		containerName := "logs-generator"
@@ -160,8 +160,8 @@ var _ = SIGDescribe("Kubectl logs", func() {
 		})
 	})
 
-	ginkgo.Describe("default container logs", func() {
-		ginkgo.Describe("the second container is the default-container by annotation", func() {
+	ginkgo.Describe("default container logs", ginkgo.Ordered, func() {
+		ginkgo.Describe("the second container is the default-container by annotation", ginkgo.Ordered, func() {
 			var pod *v1.Pod
 			podName := "pod" + string(uuid.NewUUID())
 			defaultContainerName := "container-2"

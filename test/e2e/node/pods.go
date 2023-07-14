@@ -56,7 +56,7 @@ var _ = SIGDescribe("Pods Extended", func() {
 	f := framework.NewDefaultFramework("pods")
 	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelBaseline
 
-	ginkgo.Describe("Delete Grace Period", func() {
+	ginkgo.Describe("Delete Grace Period", ginkgo.Ordered, func() {
 		var podClient *e2epod.PodClient
 		ginkgo.BeforeEach(func() {
 			podClient = e2epod.NewPodClient(f)
@@ -149,7 +149,7 @@ var _ = SIGDescribe("Pods Extended", func() {
 		})
 	})
 
-	ginkgo.Describe("Pods Set QOS Class", func() {
+	ginkgo.Describe("Pods Set QOS Class", ginkgo.Ordered, func() {
 		var podClient *e2epod.PodClient
 		ginkgo.BeforeEach(func() {
 			podClient = e2epod.NewPodClient(f)
@@ -201,7 +201,7 @@ var _ = SIGDescribe("Pods Extended", func() {
 		})
 	})
 
-	ginkgo.Describe("Pod Container Status", func() {
+	ginkgo.Describe("Pod Container Status", ginkgo.Ordered, func() {
 		var podClient *e2epod.PodClient
 		ginkgo.BeforeEach(func() {
 			podClient = e2epod.NewPodClient(f)
@@ -225,7 +225,7 @@ var _ = SIGDescribe("Pods Extended", func() {
 		})
 	})
 
-	ginkgo.Describe("Pod Container lifecycle", func() {
+	ginkgo.Describe("Pod Container lifecycle", ginkgo.Ordered, func() {
 		var podClient *e2epod.PodClient
 		ginkgo.BeforeEach(func() {
 			podClient = e2epod.NewPodClient(f)
@@ -343,7 +343,7 @@ var _ = SIGDescribe("Pods Extended", func() {
 		})
 	})
 
-	ginkgo.Describe("Pod TerminationGracePeriodSeconds is negative", func() {
+	ginkgo.Describe("Pod TerminationGracePeriodSeconds is negative", ginkgo.Ordered, func() {
 		var podClient *e2epod.PodClient
 		ginkgo.BeforeEach(func() {
 			podClient = e2epod.NewPodClient(f)

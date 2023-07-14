@@ -50,7 +50,7 @@ import (
 //
 // This must be line #50.
 
-var _ = ginkgo.Describe("e2e", func() {
+var _ = ginkgo.Describe("e2e", ginkgo.Ordered, func() {
 	ginkgo.It("skips", func() {
 		e2eskipper.Skipf("skipping %d, %d, %d", 1, 3, 4)
 	})

@@ -144,7 +144,7 @@ var _ = common.SIGDescribe("Networking", func() {
 		config.GetSelfURLStatusCode(ctx, ports.ProxyStatusPort, "/proxyMode", "200")
 	})
 
-	ginkgo.Describe("Granular Checks: Services", func() {
+	ginkgo.Describe("Granular Checks: Services", ginkgo.Ordered, func() {
 
 		ginkgo.It("should function for pod-Service: http", func(ctx context.Context) {
 			config := e2enetwork.NewNetworkingTestConfig(ctx, f)

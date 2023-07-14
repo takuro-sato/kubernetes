@@ -80,7 +80,7 @@ func validateOOMScoreAdjSettingIsInRange(pid int, expectedMinOOMScoreAdj, expect
 var _ = SIGDescribe("Container Manager Misc [Serial]", func() {
 	f := framework.NewDefaultFramework("kubelet-container-manager")
 	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
-	ginkgo.Describe("Validate OOM score adjustments [NodeFeature:OOMScoreAdj]", func() {
+	ginkgo.Describe("Validate OOM score adjustments [NodeFeature:OOMScoreAdj]", ginkgo.Ordered, func() {
 		ginkgo.Context("once the node is setup", func() {
 			ginkgo.It("container runtime's oom-score-adj should be -999", func(ctx context.Context) {
 				runtimePids, err := getPidsForProcess(framework.TestContext.ContainerRuntimeProcessName, framework.TestContext.ContainerRuntimePidFile)
