@@ -53,7 +53,8 @@ import (
 const rootCAConfigMapName = "kube-root-ca.crt"
 
 var _ = SIGDescribe("ServiceAccounts", func() {
-	f := framework.NewDefaultFramework("svcaccounts")
+	const frameworkName = "svcaccounts"
+	f := framework.NewDefaultFramework(frameworkName)
 	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelBaseline
 
 	ginkgo.It("no secret-based service account token should be auto-generated", func(ctx context.Context) {
@@ -82,7 +83,7 @@ var _ = SIGDescribe("ServiceAccounts", func() {
 		zero := int64(0)
 		pod, err := f.ClientSet.CoreV1().Pods(f.Namespace.Name).Create(ctx, &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "pod-service-account-" + string(uuid.NewUUID()),
+				Name: "pod-service-account-" + framework.DeterministicPodSuffix(frameworkName+"/"+"pod-service-account-"),
 			},
 			Spec: v1.PodSpec{
 				ServiceAccountName: sa.Name,
@@ -275,7 +276,7 @@ var _ = SIGDescribe("ServiceAccounts", func() {
 	framework.ConformanceIt("should mount projected service account token", func(ctx context.Context) {
 
 		var (
-			podName         = "test-pod-" + string(uuid.NewUUID())
+			podName         = "test-pod-" + framework.DeterministicPodSuffix(frameworkName+"/"+"test-pod-")
 			volumeName      = "test-volume"
 			volumeMountPath = "/test-volume"
 			tokenVolumePath = "/test-volume/token"

@@ -38,7 +38,6 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/rand"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/kubernetes/pkg/controller/replicaset"
 	"k8s.io/kubernetes/test/e2e/framework"
@@ -181,7 +180,7 @@ var _ = SIGDescribe("ReplicaSet", func() {
 // A basic test to check the deployment of an image using a ReplicaSet. The
 // image serves its hostname which is checked for each replica.
 func testReplicaSetServeImageOrFail(ctx context.Context, f *framework.Framework, test string, image string) {
-	name := "my-hostname-" + test + "-" + string(uuid.NewUUID())
+	name := "my-hostname-" + test + "-" + framework.DeterministicTestCaseScopedId("testReplicaSetServeImageOrFail"+"/"+"my-hostname-"+test+"-")
 	replicas := int32(1)
 
 	// Create a ReplicaSet for a service that serves its hostname.

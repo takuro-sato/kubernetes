@@ -44,6 +44,7 @@ var (
 )
 
 var _ = SIGDescribe("Security Context", func() {
+	const frameworkName = "security-context-test"
 	f := framework.NewDefaultFramework("security-context-test")
 	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
 	var podClient *e2epod.PodClient
@@ -56,7 +57,7 @@ var _ = SIGDescribe("Security Context", func() {
 		makePod := func(hostUsers bool) *v1.Pod {
 			return &v1.Pod{
 				ObjectMeta: metav1.ObjectMeta{
-					Name: "userns-" + string(uuid.NewUUID()),
+					Name: "userns-" + framework.DeterministicPodSuffix(frameworkName+"/"+"userns-"),
 				},
 				Spec: v1.PodSpec{
 					Containers: []v1.Container{
@@ -328,7 +329,8 @@ var _ = SIGDescribe("Security Context", func() {
 			}
 		}
 		createAndWaitUserPod := func(ctx context.Context, userid int64) {
-			podName := fmt.Sprintf("busybox-user-%d-%s", userid, uuid.NewUUID())
+			suffix := framework.DeterministicPodSuffix(frameworkName + "/" + fmt.Sprintf("busybox-user-%d-", userid))
+			podName := fmt.Sprintf("busybox-user-%d-%s", userid, suffix)
 			podClient.Create(ctx, makeUserPod(podName,
 				framework.BusyBoxImage,
 				[]string{"sh", "-c", fmt.Sprintf("test $(id -u) -eq %d", userid)},
@@ -449,7 +451,8 @@ var _ = SIGDescribe("Security Context", func() {
 			}
 		}
 		createAndWaitUserPod := func(ctx context.Context, readOnlyRootFilesystem bool) string {
-			podName := fmt.Sprintf("busybox-readonly-%v-%s", readOnlyRootFilesystem, uuid.NewUUID())
+			suffix := framework.DeterministicPodSuffix(frameworkName + "/" + fmt.Sprintf("busybox-readonly-%v-", readOnlyRootFilesystem))
+			podName := fmt.Sprintf("busybox-readonly-%v-%s", readOnlyRootFilesystem, suffix)
 			podClient.Create(ctx, makeUserPod(podName,
 				framework.BusyBoxImage,
 				[]string{"sh", "-c", "touch checkfile"},
@@ -510,7 +513,8 @@ var _ = SIGDescribe("Security Context", func() {
 			}
 		}
 		createAndWaitUserPod := func(ctx context.Context, privileged bool) string {
-			podName := fmt.Sprintf("busybox-privileged-%v-%s", privileged, uuid.NewUUID())
+			suffix := framework.DeterministicPodSuffix(frameworkName + "/" + fmt.Sprintf("busybox-privileged-%v-", privileged))
+			podName := fmt.Sprintf("busybox-privileged-%v-%s", privileged, suffix)
 			podClient.Create(ctx, makeUserPod(podName,
 				framework.BusyBoxImage,
 				[]string{"sh", "-c", "ip link add dummy0 type dummy || true"},
@@ -607,7 +611,7 @@ var _ = SIGDescribe("Security Context", func() {
 			[LinuxOnly]: This test is marked LinuxOnly since Windows does not support running as UID / GID, or privilege escalation.
 		*/
 		framework.ConformanceIt("should not allow privilege escalation when false [LinuxOnly] [NodeConformance]", func(ctx context.Context) {
-			podName := "alpine-nnp-false-" + string(uuid.NewUUID())
+			podName := "alpine-nnp-false-" + framework.DeterministicPodSuffix(frameworkName+"/"+"alpine-nnp-false-")
 			apeFalse := false
 			if err := createAndMatchOutput(ctx, podName, fmt.Sprintf("Effective uid: %d", nonRootTestUserID), &apeFalse, nonRootTestUserID); err != nil {
 				framework.Failf("Match output for pod %q failed: %v", podName, err)

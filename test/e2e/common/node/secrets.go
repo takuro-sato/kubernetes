@@ -27,7 +27,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2epodoutput "k8s.io/kubernetes/test/e2e/framework/pod/output"
 	imageutils "k8s.io/kubernetes/test/utils/image"
@@ -35,6 +34,7 @@ import (
 )
 
 var _ = SIGDescribe("Secrets", func() {
+	const frameworkName = "secrets"
 	f := framework.NewDefaultFramework("secrets")
 	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelBaseline
 
@@ -44,7 +44,7 @@ var _ = SIGDescribe("Secrets", func() {
 		Description: Create a secret. Create a Pod with Container that declares a environment variable which references the secret created to extract a key value from the secret. Pod MUST have the environment variable that contains proper value for the key to the secret.
 	*/
 	framework.ConformanceIt("should be consumable from pods in env vars [NodeConformance]", func(ctx context.Context) {
-		name := "secret-test-" + string(uuid.NewUUID())
+		name := "secret-test-" + framework.DeterministicTestCaseScopedId(frameworkName+"/"+"secret-test-")
 		secret := secretForTest(f.Namespace.Name, name)
 
 		ginkgo.By(fmt.Sprintf("Creating secret with name %s", secret.Name))
@@ -55,7 +55,7 @@ var _ = SIGDescribe("Secrets", func() {
 
 		pod := &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "pod-secrets-" + string(uuid.NewUUID()),
+				Name: "pod-secrets-" + framework.DeterministicPodSuffix(frameworkName+"/"+"pod-secrets-"),
 			},
 			Spec: v1.PodSpec{
 				Containers: []v1.Container{
@@ -93,7 +93,7 @@ var _ = SIGDescribe("Secrets", func() {
 		Description: Create a secret. Create a Pod with Container that declares a environment variable using 'EnvFrom' which references the secret created to extract a key value from the secret. Pod MUST have the environment variable that contains proper value for the key to the secret.
 	*/
 	framework.ConformanceIt("should be consumable via the environment [NodeConformance]", func(ctx context.Context) {
-		name := "secret-test-" + string(uuid.NewUUID())
+		name := "secret-test-" + framework.DeterministicTestCaseScopedId(frameworkName+"/"+"secret-test-")
 		secret := secretForTest(f.Namespace.Name, name)
 		ginkgo.By(fmt.Sprintf("creating secret %v/%v", f.Namespace.Name, secret.Name))
 		var err error
@@ -103,7 +103,7 @@ var _ = SIGDescribe("Secrets", func() {
 
 		pod := &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "pod-configmaps-" + string(uuid.NewUUID()),
+				Name: "pod-configmaps-" + framework.DeterministicPodSuffix(frameworkName+"/"+"pod-configmaps-"),
 			},
 			Spec: v1.PodSpec{
 				Containers: []v1.Container{
@@ -154,7 +154,7 @@ var _ = SIGDescribe("Secrets", func() {
 	framework.ConformanceIt("should patch a secret", func(ctx context.Context) {
 		ginkgo.By("creating a secret")
 
-		secretTestName := "test-secret-" + string(uuid.NewUUID())
+		secretTestName := "test-secret-" + framework.DeterministicTestCaseScopedId(frameworkName+"/"+"test-secret-")
 
 		// create a secret in the test namespace
 		_, err := f.ClientSet.CoreV1().Secrets(f.Namespace.Name).Create(ctx, &v1.Secret{
@@ -254,7 +254,7 @@ func secretForTest(namespace, name string) *v1.Secret {
 }
 
 func createEmptyKeySecretForTest(ctx context.Context, f *framework.Framework) (*v1.Secret, error) {
-	secretName := "secret-emptykey-test-" + string(uuid.NewUUID())
+	secretName := "secret-emptykey-test-" + framework.DeterministicTestCaseScopedId("createEmptyKeySecretForTest"+"/"+"secret-emptykey-test-")
 	secret := &v1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
 			Namespace: f.Namespace.Name,

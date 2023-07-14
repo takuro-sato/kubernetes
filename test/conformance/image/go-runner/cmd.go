@@ -42,7 +42,7 @@ func getCmd(env Getenver, w io.Writer) *exec.Cmd {
 	ginkgoArgs = append(ginkgoArgs, []string{
 		"--focus=" + env.Getenv(focusEnvKey),
 		"--skip=" + skip,
-		"--noColor=true",
+		"--noColor=true", "--seed=17",
 	}...)
 
 	extraArgs := []string{

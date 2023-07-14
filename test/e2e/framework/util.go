@@ -336,10 +336,12 @@ func CreateTestingNS(ctx context.Context, baseName string, c clientset.Interface
 	}
 	labels["e2e-run"] = string(RunID)
 
+	labels["extract-policy"] = "1"
+
 	// We don't use ObjectMeta.GenerateName feature, as in case of API call
 	// failure we don't know whether the namespace was created and what is its
 	// name.
-	name := fmt.Sprintf("%v-%v", baseName, RandomSuffix())
+	name := fmt.Sprintf("%v-%v", baseName, DeterministicNsSuffix(baseName)) // editing
 
 	namespaceObj := &v1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
@@ -358,7 +360,7 @@ func CreateTestingNS(ctx context.Context, baseName string, c clientset.Interface
 			if apierrors.IsAlreadyExists(err) {
 				// regenerate on conflict
 				Logf("Namespace name %q was already taken, generate a new name and retry", namespaceObj.Name)
-				namespaceObj.Name = fmt.Sprintf("%v-%v", baseName, RandomSuffix())
+				namespaceObj.Name = fmt.Sprintf("%v-%v", baseName, DeterministicNsSuffix(baseName)) // editing
 			} else {
 				Logf("Unexpected error while creating namespace: %v", err)
 			}
@@ -521,6 +523,43 @@ func LoadClientset() (*clientset.Clientset, error) {
 // RandomSuffix provides a random sequence to append to pods,services,rcs.
 func RandomSuffix() string {
 	return strconv.Itoa(rand.Intn(10000))
+}
+
+type Counter struct {
+	counters map[string]int
+	mutex    sync.Mutex
+}
+
+func NewCounter() *Counter {
+	return &Counter{
+		counters: make(map[string]int),
+	}
+}
+
+func (cm *Counter) Increment(name string) int {
+	cm.mutex.Lock()
+	defer cm.mutex.Unlock()
+
+	cm.counters[name]++
+	return cm.counters[name]
+}
+
+var nsSuffixCounter = NewCounter()
+
+func DeterministicNsSuffix(prefix string) string {
+	return strconv.Itoa(nsSuffixCounter.Increment(prefix))
+}
+
+var podSuffixCounter = NewCounter()
+
+func DeterministicPodSuffix(prefix string) string {
+	return strconv.Itoa(podSuffixCounter.Increment(prefix))
+}
+
+var TestCaseScopedIdCounter = NewCounter()
+
+func DeterministicTestCaseScopedId(prefix string) string {
+	return strconv.Itoa(TestCaseScopedIdCounter.Increment(prefix))
 }
 
 // StartCmdAndStreamOutput returns stdout and stderr after starting the given cmd.

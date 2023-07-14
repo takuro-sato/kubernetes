@@ -22,7 +22,6 @@ import (
 	"github.com/onsi/gomega"
 
 	v1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2epod "k8s.io/kubernetes/test/e2e/framework/pod"
 	e2epodoutput "k8s.io/kubernetes/test/e2e/framework/pod/output"
@@ -98,7 +97,8 @@ var _ = SIGDescribe("Containers", func() {
 
 // Return a prototypical entrypoint test pod
 func entrypointTestPod(namespace string, entrypointArgs ...string) *v1.Pod {
-	podName := "client-containers-" + string(uuid.NewUUID())
+	const frameworkName = "containers"
+	podName := "client-containers-" + framework.DeterministicPodSuffix(frameworkName+"/"+"client-containers-")
 	pod := e2epod.NewAgnhostPod(namespace, podName, nil, nil, nil, entrypointArgs...)
 
 	one := int64(1)

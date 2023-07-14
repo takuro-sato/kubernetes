@@ -23,8 +23,8 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	clientset "k8s.io/client-go/kubernetes"
+	"k8s.io/kubernetes/test/e2e/framework"
 	imageutils "k8s.io/kubernetes/test/utils/image"
 )
 
@@ -170,7 +170,7 @@ func MakeSecPod(podConfig *Config) (*v1.Pod, error) {
 		podConfig.Command = "trap exit TERM; while true; do sleep 1; done"
 	}
 
-	podName := "pod-" + string(uuid.NewUUID())
+	podName := "pod-" + framework.DeterministicPodSuffix(podConfig.NS+"/"+"pod-")
 	if podConfig.FsGroup == nil && !NodeOSDistroIs("windows") {
 		podConfig.FsGroup = func(i int64) *int64 {
 			return &i

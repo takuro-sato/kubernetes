@@ -40,7 +40,6 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/intstr"
 	utilrand "k8s.io/apimachinery/pkg/util/rand"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/dynamic"
@@ -187,7 +186,8 @@ func expectNoErrorWithRetries(fn func() error, maxRetries int, explain ...interf
 }
 
 var _ = SIGDescribe("Pods", func() {
-	f := framework.NewDefaultFramework("pods")
+	const frameworkName = "pods"
+	f := framework.NewDefaultFramework(frameworkName)
 	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelRestricted
 	var podClient *e2epod.PodClient
 	var dc dynamic.Interface
@@ -203,7 +203,7 @@ var _ = SIGDescribe("Pods", func() {
 		Description: Create a Pod. Pod status MUST return successfully and contains a valid IP address.
 	*/
 	framework.ConformanceIt("should get a host IP [NodeConformance]", func(ctx context.Context) {
-		name := "pod-hostip-" + string(uuid.NewUUID())
+		name := "pod-hostip-" + framework.DeterministicPodSuffix(frameworkName+"/"+"pod-hostip-")
 		testHostIP(ctx, podClient, e2epod.MustMixinRestrictedPodSecurity(&v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
 				Name: name,
@@ -226,7 +226,7 @@ var _ = SIGDescribe("Pods", func() {
 	*/
 	framework.ConformanceIt("should be submitted and removed [NodeConformance]", func(ctx context.Context) {
 		ginkgo.By("creating the pod")
-		name := "pod-submit-remove-" + string(uuid.NewUUID())
+		name := "pod-submit-remove-" + framework.DeterministicPodSuffix(frameworkName+"/"+"pod-submit-remove-")
 		value := strconv.Itoa(time.Now().Nanosecond())
 		pod := e2epod.MustMixinRestrictedPodSecurity(&v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
@@ -344,7 +344,7 @@ var _ = SIGDescribe("Pods", func() {
 	*/
 	framework.ConformanceIt("should be updated [NodeConformance]", func(ctx context.Context) {
 		ginkgo.By("creating the pod")
-		name := "pod-update-" + string(uuid.NewUUID())
+		name := "pod-update-" + framework.DeterministicPodSuffix(frameworkName+"/"+"pod-update-")
 		value := strconv.Itoa(time.Now().Nanosecond())
 		pod := e2epod.MustMixinRestrictedPodSecurity(&v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
@@ -398,7 +398,7 @@ var _ = SIGDescribe("Pods", func() {
 	*/
 	framework.ConformanceIt("should allow activeDeadlineSeconds to be updated [NodeConformance]", func(ctx context.Context) {
 		ginkgo.By("creating the pod")
-		name := "pod-update-activedeadlineseconds-" + string(uuid.NewUUID())
+		name := "pod-update-activedeadlineseconds-" + framework.DeterministicPodSuffix(frameworkName+"/"+"pod-update-activedeadlineseconds-")
 		value := strconv.Itoa(time.Now().Nanosecond())
 		pod := e2epod.MustMixinRestrictedPodSecurity(&v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
@@ -445,7 +445,7 @@ var _ = SIGDescribe("Pods", func() {
 	framework.ConformanceIt("should contain environment variables for services [NodeConformance]", func(ctx context.Context) {
 		// Make a pod that will be a service.
 		// This pod serves its hostname via HTTP.
-		serverName := "server-envvars-" + string(uuid.NewUUID())
+		serverName := "server-envvars-" + framework.DeterministicPodSuffix(frameworkName+"/"+"server-envvars-")
 		serverPod := e2epod.MustMixinRestrictedPodSecurity(&v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
 				Name:   serverName,
@@ -492,7 +492,7 @@ var _ = SIGDescribe("Pods", func() {
 		framework.ExpectNoError(err, "failed to create service")
 
 		// Make a client pod that verifies that it has the service environment variables.
-		podName := "client-envvars-" + string(uuid.NewUUID())
+		podName := "client-envvars-" + framework.DeterministicPodSuffix(frameworkName+"/"+"client-envvars-")
 		const containerName = "env3cont"
 		pod := e2epod.MustMixinRestrictedPodSecurity(&v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
@@ -539,7 +539,7 @@ var _ = SIGDescribe("Pods", func() {
 		framework.ExpectNoError(err, "unable to get base config")
 
 		ginkgo.By("creating the pod")
-		name := "pod-exec-websocket-" + string(uuid.NewUUID())
+		name := "pod-exec-websocket-" + framework.DeterministicPodSuffix(frameworkName+"/"+"pod-exec-websocket-")
 		pod := e2epod.MustMixinRestrictedPodSecurity(&v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
 				Name: name,
@@ -621,7 +621,7 @@ var _ = SIGDescribe("Pods", func() {
 		framework.ExpectNoError(err, "unable to get base config")
 
 		ginkgo.By("creating the pod")
-		name := "pod-logs-websocket-" + string(uuid.NewUUID())
+		name := "pod-logs-websocket-" + framework.DeterministicPodSuffix(frameworkName+"/"+"pod-logs-websocket-")
 		pod := e2epod.MustMixinRestrictedPodSecurity(&v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
 				Name: name,

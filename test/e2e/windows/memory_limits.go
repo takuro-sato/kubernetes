@@ -110,6 +110,7 @@ func overrideAllocatableMemoryTest(ctx context.Context, f *framework.Framework, 
 
 	for _, node := range nodeList.Items {
 		status := node.Status
+		// MEMO: not used in conformance test
 		podName := "mem-test-" + string(uuid.NewUUID())
 		pod := &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{

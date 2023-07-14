@@ -23,7 +23,6 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2epod "k8s.io/kubernetes/test/e2e/framework/pod"
 	e2epodoutput "k8s.io/kubernetes/test/e2e/framework/pod/output"
@@ -36,6 +35,7 @@ import (
 )
 
 var _ = SIGDescribe("Projected configMap", func() {
+	const frameworkName = "projected"
 	f := framework.NewDefaultFramework("projected")
 	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelBaseline
 
@@ -125,7 +125,7 @@ var _ = SIGDescribe("Projected configMap", func() {
 		podLogTimeout := e2epod.GetPodSecretUpdateTimeout(ctx, f.ClientSet)
 		containerTimeoutArg := fmt.Sprintf("--retry_time=%v", int(podLogTimeout.Seconds()))
 
-		name := "projected-configmap-test-upd-" + string(uuid.NewUUID())
+		name := "projected-configmap-test-upd-" + framework.DeterministicPodSuffix(frameworkName+"/"+"projected-configmap-test-upd-")
 		volumeName := "projected-configmap-volume"
 		volumeMountPath := "/etc/projected-configmap-volume"
 		configMap := &v1.ConfigMap{
@@ -177,7 +177,7 @@ var _ = SIGDescribe("Projected configMap", func() {
 		trueVal := true
 		volumeMountPath := "/etc/projected-configmap-volumes"
 
-		deleteName := "cm-test-opt-del-" + string(uuid.NewUUID())
+		deleteName := "cm-test-opt-del-" + framework.DeterministicPodSuffix("cm-test-opt-del-")
 		deleteContainerName := "delcm-volume-test"
 		deleteVolumeName := "deletecm-volume"
 		deleteConfigMap := &v1.ConfigMap{
@@ -190,7 +190,7 @@ var _ = SIGDescribe("Projected configMap", func() {
 			},
 		}
 
-		updateName := "cm-test-opt-upd-" + string(uuid.NewUUID())
+		updateName := "cm-test-opt-upd-" + framework.DeterministicPodSuffix(frameworkName+"/"+"cm-test-opt-upd-")
 		updateContainerName := "updcm-volume-test"
 		updateVolumeName := "updatecm-volume"
 		updateConfigMap := &v1.ConfigMap{
@@ -203,7 +203,7 @@ var _ = SIGDescribe("Projected configMap", func() {
 			},
 		}
 
-		createName := "cm-test-opt-create-" + string(uuid.NewUUID())
+		createName := "cm-test-opt-create-" + framework.DeterministicPodSuffix(frameworkName+"/"+"cm-test-opt-create-")
 		createContainerName := "createcm-volume-test"
 		createVolumeName := "createcm-volume"
 		createConfigMap := &v1.ConfigMap{
@@ -229,7 +229,7 @@ var _ = SIGDescribe("Projected configMap", func() {
 
 		pod := &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "pod-projected-configmaps-" + string(uuid.NewUUID()),
+				Name: "pod-projected-configmaps-" + framework.DeterministicPodSuffix(frameworkName+"/"+"pod-projected-configmaps-"),
 			},
 			Spec: v1.PodSpec{
 				Volumes: []v1.Volume{
@@ -374,7 +374,7 @@ var _ = SIGDescribe("Projected configMap", func() {
 	*/
 	framework.ConformanceIt("should be consumable in multiple volumes in the same pod [NodeConformance]", func(ctx context.Context) {
 		var (
-			name             = "projected-configmap-test-volume-" + string(uuid.NewUUID())
+			name             = "projected-configmap-test-volume-" + framework.DeterministicPodSuffix(frameworkName+"/"+"projected-configmap-test-volume-")
 			volumeName       = "projected-configmap-volume"
 			volumeMountPath  = "/etc/projected-configmap-volume"
 			volumeName2      = "projected-configmap-volume-2"
@@ -390,7 +390,7 @@ var _ = SIGDescribe("Projected configMap", func() {
 
 		pod := &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "pod-projected-configmaps-" + string(uuid.NewUUID()),
+				Name: "pod-projected-configmaps-" + framework.DeterministicPodSuffix(frameworkName+"/"+"pod-projected-configmaps-"),
 			},
 			Spec: v1.PodSpec{
 				Volumes: []v1.Volume{
@@ -480,9 +480,10 @@ var _ = SIGDescribe("Projected configMap", func() {
 
 func doProjectedConfigMapE2EWithoutMappings(ctx context.Context, f *framework.Framework, asUser bool, fsGroup int64, defaultMode *int32) {
 	groupID := int64(fsGroup)
+	const frameworkName = "projected"
 
 	var (
-		name            = "projected-configmap-test-volume-" + string(uuid.NewUUID())
+		name            = "projected-configmap-test-volume-" + framework.DeterministicPodSuffix(frameworkName+"/"+"projected-configmap-test-volume-")
 		volumeName      = "projected-configmap-volume"
 		volumeMountPath = "/etc/projected-configmap-volume"
 		configMap       = newConfigMap(f, name)
@@ -520,9 +521,10 @@ func doProjectedConfigMapE2EWithoutMappings(ctx context.Context, f *framework.Fr
 
 func doProjectedConfigMapE2EWithMappings(ctx context.Context, f *framework.Framework, asUser bool, fsGroup int64, itemMode *int32) {
 	groupID := int64(fsGroup)
+	const frameworkName = "projected"
 
 	var (
-		name            = "projected-configmap-test-volume-map-" + string(uuid.NewUUID())
+		name            = "projected-configmap-test-volume-map-" + framework.DeterministicPodSuffix(frameworkName+"/"+"projected-configmap-test-volume-map-")
 		volumeName      = "projected-configmap-volume"
 		volumeMountPath = "/etc/projected-configmap-volume"
 		configMap       = newConfigMap(f, name)
@@ -588,7 +590,8 @@ func createProjectedConfigMapMounttestPod(namespace, volumeName, referenceName, 
 			},
 		},
 	}
-	podName := "pod-projected-configmaps-" + string(uuid.NewUUID())
+	const frameworkName = "projected"
+	podName := "pod-projected-configmaps-" + framework.DeterministicPodSuffix(frameworkName+"/"+"pod-projected-configmaps-")
 	mounttestArgs = append([]string{"mounttest"}, mounttestArgs...)
 	pod := e2epod.NewAgnhostPod(namespace, podName, volumes, createMounts(volumeName, mountPath, true), nil, mounttestArgs...)
 	pod.Spec.RestartPolicy = v1.RestartPolicyNever
