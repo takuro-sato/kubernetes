@@ -24,7 +24,6 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/pkg/kubelet/events"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2epod "k8s.io/kubernetes/test/e2e/framework/pod"
@@ -56,7 +55,7 @@ var _ = SIGDescribe("Security Context", func() {
 		makePod := func(hostUsers bool) *v1.Pod {
 			return &v1.Pod{
 				ObjectMeta: metav1.ObjectMeta{
-					Name: "userns-" + string(uuid.NewUUID()),
+					Name: "userns-" + string(framework.DummyUUID()),
 				},
 				Spec: v1.PodSpec{
 					Containers: []v1.Container{
@@ -125,7 +124,7 @@ var _ = SIGDescribe("Security Context", func() {
 			// Create all volume types supported: configmap, secret, downwardAPI, projected.
 
 			// Create configmap.
-			name := "userns-volumes-test-" + string(uuid.NewUUID())
+			name := "userns-volumes-test-" + string(framework.DummyUUID())
 			configMap := newConfigMap(f, name)
 			ginkgo.By(fmt.Sprintf("Creating configMap %v/%v", f.Namespace.Name, configMap.Name))
 			var err error
@@ -157,7 +156,7 @@ var _ = SIGDescribe("Security Context", func() {
 			falseVar := false
 			pod := &v1.Pod{
 				ObjectMeta: metav1.ObjectMeta{
-					Name: "pod-userns-volumes-" + string(uuid.NewUUID()),
+					Name: "pod-userns-volumes-" + string(framework.DummyUUID()),
 				},
 				Spec: v1.PodSpec{
 					Containers: []v1.Container{
@@ -247,7 +246,7 @@ var _ = SIGDescribe("Security Context", func() {
 
 		ginkgo.It("should set FSGroup to user inside the container with hostUsers=false [LinuxOnly] [Feature:UserNamespacesStatelessPodsSupport]", func(ctx context.Context) {
 			// Create configmap.
-			name := "userns-volumes-test-" + string(uuid.NewUUID())
+			name := "userns-volumes-test-" + string(framework.DummyUUID())
 			configMap := newConfigMap(f, name)
 			ginkgo.By(fmt.Sprintf("Creating configMap %v/%v", f.Namespace.Name, configMap.Name))
 			var err error
@@ -260,7 +259,7 @@ var _ = SIGDescribe("Security Context", func() {
 			fsGroup := int64(200)
 			pod := &v1.Pod{
 				ObjectMeta: metav1.ObjectMeta{
-					Name: "pod-userns-fsgroup-" + string(uuid.NewUUID()),
+					Name: "pod-userns-fsgroup-" + string(framework.DummyUUID()),
 				},
 				Spec: v1.PodSpec{
 					Containers: []v1.Container{
@@ -328,7 +327,7 @@ var _ = SIGDescribe("Security Context", func() {
 			}
 		}
 		createAndWaitUserPod := func(ctx context.Context, userid int64) {
-			podName := fmt.Sprintf("busybox-user-%d-%s", userid, uuid.NewUUID())
+			podName := fmt.Sprintf("busybox-user-%d-%s", userid, framework.DummyUUID())
 			podClient.Create(ctx, makeUserPod(podName,
 				framework.BusyBoxImage,
 				[]string{"sh", "-c", fmt.Sprintf("test $(id -u) -eq %d", userid)},
@@ -449,7 +448,7 @@ var _ = SIGDescribe("Security Context", func() {
 			}
 		}
 		createAndWaitUserPod := func(ctx context.Context, readOnlyRootFilesystem bool) string {
-			podName := fmt.Sprintf("busybox-readonly-%v-%s", readOnlyRootFilesystem, uuid.NewUUID())
+			podName := fmt.Sprintf("busybox-readonly-%v-%s", readOnlyRootFilesystem, framework.DummyUUID())
 			podClient.Create(ctx, makeUserPod(podName,
 				framework.BusyBoxImage,
 				[]string{"sh", "-c", "touch checkfile"},
@@ -510,7 +509,7 @@ var _ = SIGDescribe("Security Context", func() {
 			}
 		}
 		createAndWaitUserPod := func(ctx context.Context, privileged bool) string {
-			podName := fmt.Sprintf("busybox-privileged-%v-%s", privileged, uuid.NewUUID())
+			podName := fmt.Sprintf("busybox-privileged-%v-%s", privileged, framework.DummyUUID())
 			podClient.Create(ctx, makeUserPod(podName,
 				framework.BusyBoxImage,
 				[]string{"sh", "-c", "ip link add dummy0 type dummy || true"},
@@ -592,7 +591,7 @@ var _ = SIGDescribe("Security Context", func() {
 			[LinuxOnly]: This test is marked LinuxOnly since Windows does not support running as UID / GID, or privilege escalation.
 		*/
 		ginkgo.It("should allow privilege escalation when not explicitly set and uid != 0 [LinuxOnly] [NodeConformance]", func(ctx context.Context) {
-			podName := "alpine-nnp-nil-" + string(uuid.NewUUID())
+			podName := "alpine-nnp-nil-" + string(framework.DummyUUID())
 			if err := createAndMatchOutput(ctx, podName, "Effective uid: 0", nil, nonRootTestUserID); err != nil {
 				framework.Failf("Match output for pod %q failed: %v", podName, err)
 			}
@@ -607,7 +606,7 @@ var _ = SIGDescribe("Security Context", func() {
 			[LinuxOnly]: This test is marked LinuxOnly since Windows does not support running as UID / GID, or privilege escalation.
 		*/
 		framework.ConformanceIt("should not allow privilege escalation when false [LinuxOnly] [NodeConformance]", func(ctx context.Context) {
-			podName := "alpine-nnp-false-" + string(uuid.NewUUID())
+			podName := "alpine-nnp-false-" + string(framework.DummyUUID())
 			apeFalse := false
 			if err := createAndMatchOutput(ctx, podName, fmt.Sprintf("Effective uid: %d", nonRootTestUserID), &apeFalse, nonRootTestUserID); err != nil {
 				framework.Failf("Match output for pod %q failed: %v", podName, err)
@@ -624,7 +623,7 @@ var _ = SIGDescribe("Security Context", func() {
 			[LinuxOnly]: This test is marked LinuxOnly since Windows does not support running as UID / GID.
 		*/
 		ginkgo.It("should allow privilege escalation when true [LinuxOnly] [NodeConformance]", func(ctx context.Context) {
-			podName := "alpine-nnp-true-" + string(uuid.NewUUID())
+			podName := "alpine-nnp-true-" + string(framework.DummyUUID())
 			apeTrue := true
 			if err := createAndMatchOutput(ctx, podName, "Effective uid: 0", &apeTrue, nonRootTestUserID); err != nil {
 				framework.Failf("Match output for pod %q failed: %v", podName, err)

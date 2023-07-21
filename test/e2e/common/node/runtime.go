@@ -25,7 +25,6 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/pkg/kubelet/images"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2epod "k8s.io/kubernetes/test/e2e/framework/pod"
@@ -299,7 +298,7 @@ while true; do sleep 1; done
 						Data: map[string][]byte{v1.DockerConfigJsonKey: []byte(auth)},
 						Type: v1.SecretTypeDockerConfigJson,
 					}
-					secret.Name = "image-pull-secret-" + string(uuid.NewUUID())
+					secret.Name = "image-pull-secret-" + string(framework.DummyUUID())
 					ginkgo.By("create image pull secret")
 					_, err := f.ClientSet.CoreV1().Secrets(f.Namespace.Name).Create(ctx, secret, metav1.CreateOptions{})
 					framework.ExpectNoError(err)

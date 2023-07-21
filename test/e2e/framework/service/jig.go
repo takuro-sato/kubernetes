@@ -37,7 +37,6 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 	utilnet "k8s.io/apimachinery/pkg/util/net"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/apimachinery/pkg/watch"
 	clientset "k8s.io/client-go/kubernetes"
@@ -76,7 +75,7 @@ func NewTestJig(client clientset.Interface, namespace, name string) *TestJig {
 	j.Client = client
 	j.Namespace = namespace
 	j.Name = name
-	j.ID = j.Name + "-" + string(uuid.NewUUID())
+	j.ID = j.Name + "-" + string(framework.DummyUUID())
 	j.Labels = map[string]string{"testid": j.ID}
 
 	return j

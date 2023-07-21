@@ -37,7 +37,6 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/rand"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/kubernetes/test/e2e/framework"
@@ -341,7 +340,7 @@ func getVSpherePodSpecWithVolumePaths(volumePaths []string, keyValuelabel map[st
 		Spec: v1.PodSpec{
 			Containers: []v1.Container{
 				{
-					Name:         "vsphere-e2e-container-" + string(uuid.NewUUID()),
+					Name:         "vsphere-e2e-container-" + string(framework.DummyUUID()),
 					Image:        imageutils.GetE2EImage(imageutils.BusyBox),
 					Command:      commands,
 					VolumeMounts: volumeMounts,

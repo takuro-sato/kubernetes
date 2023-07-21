@@ -25,7 +25,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2epod "k8s.io/kubernetes/test/e2e/framework/pod"
 	e2epodoutput "k8s.io/kubernetes/test/e2e/framework/pod/output"
@@ -240,7 +239,7 @@ var _ = SIGDescribe("EmptyDir volumes", func() {
 
 		pod := &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "pod-sharedvolume-" + string(uuid.NewUUID()),
+				Name: "pod-sharedvolume-" + string(framework.DummyUUID()),
 			},
 			Spec: v1.PodSpec{
 				Volumes: []v1.Volume{
@@ -308,7 +307,7 @@ var _ = SIGDescribe("EmptyDir volumes", func() {
 
 		pod := &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "pod-size-memory-volume-" + string(uuid.NewUUID()),
+				Name: "pod-size-memory-volume-" + string(framework.DummyUUID()),
 			},
 			Spec: v1.PodSpec{
 				Volumes: []v1.Volume{
@@ -588,7 +587,7 @@ func formatMedium(medium v1.StorageMedium) string {
 // testPodWithVolume creates a Pod that runs as the given UID and with the given empty dir source mounted at the given path.
 // If the uid is 0, the Pod will run as its default user (root).
 func testPodWithVolume(uid int64, path string, source *v1.EmptyDirVolumeSource) *v1.Pod {
-	podName := "pod-" + string(uuid.NewUUID())
+	podName := "pod-" + string(framework.DummyUUID())
 	pod := &v1.Pod{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "Pod",

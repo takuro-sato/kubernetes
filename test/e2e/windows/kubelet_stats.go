@@ -24,7 +24,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2ekubelet "k8s.io/kubernetes/test/e2e/framework/kubelet"
 	e2enode "k8s.io/kubernetes/test/e2e/framework/node"
@@ -236,7 +235,7 @@ func newKubeletStatsTestPods(numPods int, image imageutils.Config, nodeName stri
 	var pods []*v1.Pod
 
 	for i := 0; i < numPods; i++ {
-		podName := "statscollectiontest-" + string(uuid.NewUUID())
+		podName := "statscollectiontest-" + string(framework.DummyUUID())
 		pod := v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
 				Name: fmt.Sprintf("%s-%d", podName, i),

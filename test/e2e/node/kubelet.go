@@ -26,7 +26,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/kubernetes/test/e2e/framework"
@@ -337,7 +336,7 @@ var _ = SIGDescribe("kubelet", func() {
 				start(ctx)
 				totalPods := itArg.podsPerNode * numNodes
 				ginkgo.By(fmt.Sprintf("Creating a RC of %d pods and wait until all pods of this RC are running", totalPods))
-				rcName := fmt.Sprintf("cleanup%d-%s", totalPods, string(uuid.NewUUID()))
+				rcName := fmt.Sprintf("cleanup%d-%s", totalPods, string(framework.DummyUUID()))
 
 				err := e2erc.RunRC(ctx, testutils.RCConfig{
 					Client:       f.ClientSet,

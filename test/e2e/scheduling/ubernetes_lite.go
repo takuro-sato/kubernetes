@@ -29,7 +29,6 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2enode "k8s.io/kubernetes/test/e2e/framework/node"
@@ -183,7 +182,7 @@ func checkZoneSpreading(ctx context.Context, c clientset.Interface, pods *v1.Pod
 // SpreadRCOrFail Check that the pods comprising a replication
 // controller get spread evenly across available zones
 func SpreadRCOrFail(ctx context.Context, f *framework.Framework, replicaCount int32, zoneNames sets.String, image string, args []string) {
-	name := "ubelite-spread-rc-" + string(uuid.NewUUID())
+	name := "ubelite-spread-rc-" + string(framework.DummyUUID())
 	ginkgo.By(fmt.Sprintf("Creating replication controller %s", name))
 	controller, err := f.ClientSet.CoreV1().ReplicationControllers(f.Namespace.Name).Create(ctx, &v1.ReplicationController{
 		ObjectMeta: metav1.ObjectMeta{

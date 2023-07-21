@@ -22,7 +22,6 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2epod "k8s.io/kubernetes/test/e2e/framework/pod"
 	e2eskipper "k8s.io/kubernetes/test/e2e/framework/skipper"
@@ -135,7 +134,7 @@ func windowsCheck(address string) []string {
 
 func createTestPod(f *framework.Framework, image string, os string) *v1.Pod {
 	containerName := fmt.Sprintf("%s-container", os)
-	podName := "pod-" + string(uuid.NewUUID())
+	podName := "pod-" + string(framework.DummyUUID())
 	pod := &v1.Pod{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "Pod",

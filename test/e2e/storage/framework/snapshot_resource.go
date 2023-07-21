@@ -27,7 +27,6 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/types"
 	utilerrors "k8s.io/apimachinery/pkg/util/errors"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	"k8s.io/kubernetes/test/e2e/storage/utils"
 )
@@ -138,7 +137,7 @@ func CreateSnapshotResource(ctx context.Context, sDriver SnapshottableTestDriver
 		framework.ExpectNoError(err)
 
 		ginkgo.By("creating a snapshot content with the snapshot handle")
-		uuid := uuid.NewUUID()
+		uuid := framework.DummyUUID()
 
 		snapName := getPreProvisionedSnapshotName(uuid)
 		snapcontentName := getPreProvisionedSnapshotContentName(uuid)

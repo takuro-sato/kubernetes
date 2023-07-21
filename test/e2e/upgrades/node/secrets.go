@@ -22,7 +22,6 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2eoutput "k8s.io/kubernetes/test/e2e/framework/pod/output"
 	"k8s.io/kubernetes/test/e2e/upgrades"
@@ -87,7 +86,7 @@ func (t *SecretUpgradeTest) testPod(ctx context.Context, f *framework.Framework)
 
 	pod := &v1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "pod-secrets-" + string(uuid.NewUUID()),
+			Name:      "pod-secrets-" + string(framework.DummyUUID()),
 			Namespace: t.secret.ObjectMeta.Namespace,
 		},
 		Spec: v1.PodSpec{

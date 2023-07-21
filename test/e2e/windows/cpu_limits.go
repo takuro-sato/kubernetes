@@ -24,7 +24,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2ekubelet "k8s.io/kubernetes/test/e2e/framework/kubelet"
 	e2epod "k8s.io/kubernetes/test/e2e/framework/pod"
@@ -113,7 +112,7 @@ func newCPUBurnPods(numPods int, image imageutils.Config, cpuLimit string, memor
 
 	for i := 0; i < numPods; i++ {
 
-		podName := "cpulimittest-" + string(uuid.NewUUID())
+		podName := "cpulimittest-" + string(framework.DummyUUID())
 		pod := v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
 				Name: podName,

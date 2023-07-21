@@ -27,7 +27,6 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2enode "k8s.io/kubernetes/test/e2e/framework/node"
@@ -75,7 +74,7 @@ var _ = utils.SIGDescribe("Volume Disk Format [Feature:vsphere]", func() {
 		client = f.ClientSet
 		namespace = f.Namespace.Name
 		nodeName = GetReadySchedulableRandomNodeInfo(ctx, client).Name
-		nodeLabelValue = "vsphere_e2e_" + string(uuid.NewUUID())
+		nodeLabelValue = "vsphere_e2e_" + string(framework.DummyUUID())
 		nodeKeyValueLabel = map[string]string{NodeLabelKey: nodeLabelValue}
 		e2enode.AddOrUpdateLabelOnNode(client, nodeName, NodeLabelKey, nodeLabelValue)
 		ginkgo.DeferCleanup(e2enode.RemoveLabelOffNode, client, nodeName, NodeLabelKey)

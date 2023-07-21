@@ -21,7 +21,6 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2epod "k8s.io/kubernetes/test/e2e/framework/pod"
 	e2eskipper "k8s.io/kubernetes/test/e2e/framework/skipper"
@@ -44,7 +43,7 @@ var _ = SIGDescribe("Sysctls [LinuxOnly] [NodeConformance]", func() {
 	var podClient *e2epod.PodClient
 
 	testPod := func() *v1.Pod {
-		podName := "sysctl-" + string(uuid.NewUUID())
+		podName := "sysctl-" + string(framework.DummyUUID())
 		pod := v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
 				Name:        podName,

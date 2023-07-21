@@ -39,7 +39,6 @@ import (
 	utilerrors "k8s.io/apimachinery/pkg/util/errors"
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/klog/v2"
@@ -1028,7 +1027,7 @@ func runDrainTest(ctx context.Context, f *framework.Framework, migSizes map[stri
 	}.AsSelector().String()})
 	framework.ExpectNoError(err)
 	numPods := len(nodes.Items) * podsPerNode
-	testID := string(uuid.NewUUID()) // So that we can label and find pods
+	testID := string(framework.DummyUUID()) // So that we can label and find pods
 	labelMap := map[string]string{"test_id": testID}
 	framework.ExpectNoError(runReplicatedPodOnEachNode(ctx, f, nodes.Items, namespace, podsPerNode, "reschedulable-pods", labelMap, 0))
 

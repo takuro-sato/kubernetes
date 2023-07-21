@@ -27,7 +27,6 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2enode "k8s.io/kubernetes/test/e2e/framework/node"
@@ -90,7 +89,7 @@ var _ = utils.SIGDescribe("Verify Volume Attach Through vpxd Restart [Feature:vs
 		for i := 0; i < numNodes; i++ {
 			nodeInfo := TestContext.NodeMapper.GetNodeInfo(nodes.Items[i].Name)
 			nodeName := nodes.Items[i].Name
-			nodeLabel := "vsphere_e2e_" + string(uuid.NewUUID())
+			nodeLabel := "vsphere_e2e_" + string(framework.DummyUUID())
 			e2enode.AddOrUpdateLabelOnNode(client, nodeName, labelKey, nodeLabel)
 
 			vcHost := nodeInfo.VSphere.Config.Hostname

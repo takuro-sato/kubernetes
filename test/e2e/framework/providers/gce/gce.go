@@ -30,7 +30,6 @@ import (
 	"google.golang.org/api/googleapi"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/kubernetes/test/e2e/framework"
@@ -235,7 +234,7 @@ func (p *Provider) DeleteShare(accountName, shareName string) error {
 
 // CreatePD creates a persistent volume
 func (p *Provider) CreatePD(zone string) (string, error) {
-	pdName := fmt.Sprintf("%s-%s", framework.TestContext.Prefix, string(uuid.NewUUID()))
+	pdName := fmt.Sprintf("%s-%s", framework.TestContext.Prefix, string(framework.DummyUUID()))
 
 	if zone == "" && framework.TestContext.CloudConfig.MultiZone {
 		zones, err := p.gceCloud.GetAllZonesFromCloudProvider()

@@ -23,7 +23,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2enetwork "k8s.io/kubernetes/test/e2e/framework/network"
 	e2epodoutput "k8s.io/kubernetes/test/e2e/framework/pod/output"
@@ -43,7 +42,7 @@ var _ = SIGDescribe("Downward API", func() {
 	   Description: Downward API MUST expose Pod and Container fields as environment variables. Specify Pod Name, namespace and IP as environment variable in the Pod Spec are visible at runtime in the container.
 	*/
 	framework.ConformanceIt("should provide pod name, namespace and IP address as env vars [NodeConformance]", func(ctx context.Context) {
-		podName := "downward-api-" + string(uuid.NewUUID())
+		podName := "downward-api-" + string(framework.DummyUUID())
 		env := []v1.EnvVar{
 			{
 				Name: "POD_NAME",
@@ -89,7 +88,7 @@ var _ = SIGDescribe("Downward API", func() {
 	   Description: Downward API MUST expose Pod and Container fields as environment variables. Specify host IP as environment variable in the Pod Spec are visible at runtime in the container.
 	*/
 	framework.ConformanceIt("should provide host IP as an env var [NodeConformance]", func(ctx context.Context) {
-		podName := "downward-api-" + string(uuid.NewUUID())
+		podName := "downward-api-" + string(framework.DummyUUID())
 		env := []v1.EnvVar{
 			{
 				Name: "HOST_IP",
@@ -110,7 +109,7 @@ var _ = SIGDescribe("Downward API", func() {
 	})
 
 	ginkgo.It("should provide host IP and pod IP as an env var if pod uses host network [LinuxOnly]", func(ctx context.Context) {
-		podName := "downward-api-" + string(uuid.NewUUID())
+		podName := "downward-api-" + string(framework.DummyUUID())
 		env := []v1.EnvVar{
 			{
 				Name: "HOST_IP",
@@ -165,7 +164,7 @@ var _ = SIGDescribe("Downward API", func() {
 	   Description: Downward API MUST expose CPU request and Memory request set through environment variables at runtime in the container.
 	*/
 	framework.ConformanceIt("should provide container's limits.cpu/memory and requests.cpu/memory as env vars [NodeConformance]", func(ctx context.Context) {
-		podName := "downward-api-" + string(uuid.NewUUID())
+		podName := "downward-api-" + string(framework.DummyUUID())
 		env := []v1.EnvVar{
 			{
 				Name: "CPU_LIMIT",
@@ -216,7 +215,7 @@ var _ = SIGDescribe("Downward API", func() {
 	   Description: Downward API MUST expose CPU request and Memory limits set through environment variables at runtime in the container.
 	*/
 	framework.ConformanceIt("should provide default limits.cpu/memory from node allocatable [NodeConformance]", func(ctx context.Context) {
-		podName := "downward-api-" + string(uuid.NewUUID())
+		podName := "downward-api-" + string(framework.DummyUUID())
 		env := []v1.EnvVar{
 			{
 				Name: "CPU_LIMIT",
@@ -266,7 +265,7 @@ var _ = SIGDescribe("Downward API", func() {
 	   Description: Downward API MUST expose Pod UID set through environment variables at runtime in the container.
 	*/
 	framework.ConformanceIt("should provide pod UID as env vars [NodeConformance]", func(ctx context.Context) {
-		podName := "downward-api-" + string(uuid.NewUUID())
+		podName := "downward-api-" + string(framework.DummyUUID())
 		env := []v1.EnvVar{
 			{
 				Name: "POD_UID",
@@ -293,7 +292,7 @@ var _ = SIGDescribe("Downward API [Serial] [Disruptive] [NodeFeature:DownwardAPI
 
 	ginkgo.Context("Downward API tests for hugepages", func() {
 		ginkgo.It("should provide container's limits.hugepages-<pagesize> and requests.hugepages-<pagesize> as env vars", func(ctx context.Context) {
-			podName := "downward-api-" + string(uuid.NewUUID())
+			podName := "downward-api-" + string(framework.DummyUUID())
 			env := []v1.EnvVar{
 				{
 					Name: "HUGEPAGES_LIMIT",
@@ -348,7 +347,7 @@ var _ = SIGDescribe("Downward API [Serial] [Disruptive] [NodeFeature:DownwardAPI
 		})
 
 		ginkgo.It("should provide default limits.hugepages-<pagesize> from node allocatable", func(ctx context.Context) {
-			podName := "downward-api-" + string(uuid.NewUUID())
+			podName := "downward-api-" + string(framework.DummyUUID())
 			env := []v1.EnvVar{
 				{
 					Name: "HUGEPAGES_LIMIT",

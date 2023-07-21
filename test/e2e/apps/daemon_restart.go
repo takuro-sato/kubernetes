@@ -27,7 +27,6 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/apimachinery/pkg/watch"
 	clientset "k8s.io/client-go/kubernetes"
@@ -209,7 +208,7 @@ var _ = SIGDescribe("DaemonRestart [Disruptive]", func() {
 
 	f := framework.NewDefaultFramework("daemonrestart")
 	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
-	rcName := "daemonrestart" + strconv.Itoa(numPods) + "-" + string(uuid.NewUUID())
+	rcName := "daemonrestart" + strconv.Itoa(numPods) + "-" + string(framework.DummyUUID())
 	labelSelector := labels.Set(map[string]string{"name": rcName}).AsSelector()
 	existingPods := cache.NewStore(cache.MetaNamespaceKeyFunc)
 	var ns string

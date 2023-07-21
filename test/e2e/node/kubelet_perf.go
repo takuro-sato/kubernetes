@@ -23,7 +23,6 @@ import (
 	"time"
 
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	clientset "k8s.io/client-go/kubernetes"
 	kubeletstatsv1alpha1 "k8s.io/kubelet/pkg/apis/stats/v1alpha1"
 	"k8s.io/kubernetes/test/e2e/framework"
@@ -70,7 +69,7 @@ func runResourceTrackingTest(ctx context.Context, f *framework.Framework, podsPe
 	numNodes := nodeNames.Len()
 	totalPods := podsPerNode * numNodes
 	ginkgo.By(fmt.Sprintf("Creating a RC of %d pods and wait until all pods of this RC are running", totalPods))
-	rcName := fmt.Sprintf("resource%d-%s", totalPods, string(uuid.NewUUID()))
+	rcName := fmt.Sprintf("resource%d-%s", totalPods, string(framework.DummyUUID()))
 
 	// TODO: Use a more realistic workload
 	err := e2erc.RunRC(ctx, testutils.RCConfig{

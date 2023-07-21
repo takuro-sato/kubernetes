@@ -54,7 +54,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	utilnet "k8s.io/apimachinery/pkg/util/net"
 	utilnettesting "k8s.io/apimachinery/pkg/util/net/testing"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/apiserver/pkg/authentication/serviceaccount"
 	genericregistry "k8s.io/apiserver/pkg/registry/generic/registry"
@@ -1832,7 +1831,7 @@ metadata:
 	ginkgo.Describe("Kubectl taint [Serial]", ginkgo.Ordered, func() {
 		ginkgo.It("should update the taint on a node", func(ctx context.Context) {
 			testTaint := v1.Taint{
-				Key:    fmt.Sprintf("kubernetes.io/e2e-taint-key-001-%s", string(uuid.NewUUID())),
+				Key:    fmt.Sprintf("kubernetes.io/e2e-taint-key-001-%s", string(framework.DummyUUID())),
 				Value:  "testing-taint-value",
 				Effect: v1.TaintEffectNoSchedule,
 			}
@@ -1863,7 +1862,7 @@ metadata:
 
 		ginkgo.It("should remove all the taints with the same key off a node", func(ctx context.Context) {
 			testTaint := v1.Taint{
-				Key:    fmt.Sprintf("kubernetes.io/e2e-taint-key-002-%s", string(uuid.NewUUID())),
+				Key:    fmt.Sprintf("kubernetes.io/e2e-taint-key-002-%s", string(framework.DummyUUID())),
 				Value:  "testing-taint-value",
 				Effect: v1.TaintEffectNoSchedule,
 			}

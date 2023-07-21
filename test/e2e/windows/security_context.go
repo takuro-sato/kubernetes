@@ -27,7 +27,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/fields"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/kubernetes/pkg/kubelet/events"
 	"k8s.io/kubernetes/test/e2e/framework"
@@ -193,7 +192,7 @@ var _ = SIGDescribe("[Feature:Windows] SecurityContext", func() {
 })
 
 func runAsUserNamePod(username *string) *v1.Pod {
-	podName := "run-as-username-" + string(uuid.NewUUID())
+	podName := "run-as-username-" + string(framework.DummyUUID())
 	return &v1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: podName,

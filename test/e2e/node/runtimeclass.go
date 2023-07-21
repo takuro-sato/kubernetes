@@ -26,7 +26,6 @@ import (
 	nodev1 "k8s.io/api/node/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	runtimeclasstest "k8s.io/kubernetes/pkg/kubelet/runtimeclass/testing"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2enode "k8s.io/kubernetes/test/e2e/framework/node"
@@ -44,7 +43,7 @@ var _ = SIGDescribe("RuntimeClass", func() {
 	f.NamespacePodSecurityEnforceLevel = api.LevelPrivileged
 
 	ginkgo.It("should reject a Pod requesting a RuntimeClass with conflicting node selector", func(ctx context.Context) {
-		labelFooName := "foo-" + string(uuid.NewUUID())
+		labelFooName := "foo-" + string(framework.DummyUUID())
 
 		scheduling := &nodev1.Scheduling{
 			NodeSelector: map[string]string{
@@ -68,8 +67,8 @@ var _ = SIGDescribe("RuntimeClass", func() {
 	})
 
 	ginkgo.It("should run a Pod requesting a RuntimeClass with scheduling with taints [Serial] ", func(ctx context.Context) {
-		labelFooName := "foo-" + string(uuid.NewUUID())
-		labelFizzName := "fizz-" + string(uuid.NewUUID())
+		labelFooName := "foo-" + string(framework.DummyUUID())
+		labelFizzName := "fizz-" + string(framework.DummyUUID())
 
 		nodeName := scheduling.GetNodeThatCanRunPod(ctx, f)
 		nodeSelector := map[string]string{
@@ -133,8 +132,8 @@ var _ = SIGDescribe("RuntimeClass", func() {
 			e2eskipper.Skipf("Skipping test as node does not have E2E runtime class handler preconfigured in container runtime config: %v", err)
 		}
 
-		labelFooName := "foo-" + string(uuid.NewUUID())
-		labelFizzName := "fizz-" + string(uuid.NewUUID())
+		labelFooName := "foo-" + string(framework.DummyUUID())
+		labelFizzName := "fizz-" + string(framework.DummyUUID())
 
 		nodeName := scheduling.GetNodeThatCanRunPod(ctx, f)
 		nodeSelector := map[string]string{

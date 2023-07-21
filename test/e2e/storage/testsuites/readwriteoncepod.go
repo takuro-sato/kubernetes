@@ -26,7 +26,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/fields"
 	errors "k8s.io/apimachinery/pkg/util/errors"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/kubernetes/pkg/kubelet/events"
 	"k8s.io/kubernetes/test/e2e/framework"
@@ -135,7 +134,7 @@ func (t *readWriteOncePodTestSuite) DefineTests(driver storageframework.TestDriv
 		l.volume = storageframework.CreateVolumeResourceWithAccessModes(ctx, driver, l.config, pattern, t.GetTestSuiteInfo().SupportedSizeRange, accessModes)
 
 		l.priorityClass = &schedulingv1.PriorityClass{
-			ObjectMeta: metav1.ObjectMeta{Name: "e2e-test-read-write-once-pod-" + string(uuid.NewUUID())},
+			ObjectMeta: metav1.ObjectMeta{Name: "e2e-test-read-write-once-pod-" + string(framework.DummyUUID())},
 			Value:      int32(1000),
 		}
 		_, err := l.cs.SchedulingV1().PriorityClasses().Create(ctx, l.priorityClass, metav1.CreateOptions{})

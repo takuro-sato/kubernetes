@@ -19,6 +19,8 @@ package framework
 import (
 	"bytes"
 	"context"
+	"crypto/md5"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -27,6 +29,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"runtime/debug"
 	"strconv"
 	"strings"
 	"sync"
@@ -41,8 +44,8 @@ import (
 	"k8s.io/apimachinery/pkg/fields"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/dynamic"
@@ -143,7 +146,7 @@ var (
 
 // RunID is a unique identifier of the e2e run.
 // Beware that this ID is not the same for all tests in the e2e run, because each Ginkgo node creates it separately.
-var RunID = uuid.NewUUID()
+var RunID = DummyUUID()
 
 // CreateTestingNSFn is a func that is responsible for creating namespace used for executing e2e tests.
 type CreateTestingNSFn func(ctx context.Context, baseName string, c clientset.Interface, labels map[string]string) (*v1.Namespace, error)
@@ -755,4 +758,45 @@ retriesLoop:
 		ExpectEqual(totalValidWatchEvents, len(expectedWatchEvents), "Error: there must be an equal amount of total valid watch events (%d) and expected watch events (%d)", totalValidWatchEvents, len(expectedWatchEvents))
 		break retriesLoop
 	}
+}
+
+type Counter struct {
+	counters map[string]int
+	mutex    sync.Mutex
+}
+
+func NewCounter() *Counter {
+	return &Counter{
+		counters: make(map[string]int),
+	}
+}
+
+func (cm *Counter) Increment(name string) int {
+	cm.mutex.Lock()
+	defer cm.mutex.Unlock()
+
+	cm.counters[name]++
+	return cm.counters[name]
+}
+
+var idCounter = NewCounter()
+
+func idSuffix(prefix string) int {
+	return idCounter.Increment(prefix)
+}
+
+func getMD5Hash(text string) string {
+	hasher := md5.New()
+	hasher.Write([]byte(text))
+	hash := hasher.Sum(nil)
+	return hex.EncodeToString(hash)
+}
+
+func DummyUUID() types.UID {
+	stackTrace := string(debug.Stack())
+	// Prevent resource name hits the limit
+	hash := getMD5Hash(stackTrace)
+	// format of 02c84665-0791-4aee-be0c-c48adcecfe15
+	strUUID := fmt.Sprintf("%s-%s-%s-%s-%012d", hash[0:8], hash[8:12], hash[12:16], hash[16:20], idSuffix(hash))
+	return types.UID(strUUID)
 }

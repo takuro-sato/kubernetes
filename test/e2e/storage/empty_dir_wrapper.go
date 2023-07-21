@@ -24,7 +24,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2enode "k8s.io/kubernetes/test/e2e/framework/node"
 	e2epod "k8s.io/kubernetes/test/e2e/framework/pod"
@@ -65,7 +64,7 @@ var _ = utils.SIGDescribe("EmptyDir wrapper volumes", func() {
 		Description: Secret volume and ConfigMap volume is created with data. Pod MUST be able to start with Secret and ConfigMap volumes mounted into the container.
 	*/
 	framework.ConformanceIt("should not conflict", func(ctx context.Context) {
-		name := "emptydir-wrapper-test-" + string(uuid.NewUUID())
+		name := "emptydir-wrapper-test-" + string(framework.DummyUUID())
 		volumeName := "secret-volume"
 		volumeMountPath := "/etc/secret-volume"
 
@@ -103,7 +102,7 @@ var _ = utils.SIGDescribe("EmptyDir wrapper volumes", func() {
 
 		pod := &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "pod-secrets-" + string(uuid.NewUUID()),
+				Name: "pod-secrets-" + string(framework.DummyUUID()),
 			},
 			Spec: v1.PodSpec{
 				Volumes: []v1.Volume{
@@ -210,7 +209,7 @@ var _ = utils.SIGDescribe("EmptyDir wrapper volumes", func() {
 
 func createGitServer(ctx context.Context, f *framework.Framework) (gitURL string, gitRepo string, cleanup func()) {
 	var err error
-	gitServerPodName := "git-server-" + string(uuid.NewUUID())
+	gitServerPodName := "git-server-" + string(framework.DummyUUID())
 	containerPort := 8000
 
 	labels := map[string]string{"name": gitServerPodName}
@@ -332,7 +331,7 @@ func makeConfigMapVolumes(configMapNames []string) (volumes []v1.Volume, volumeM
 func testNoWrappedVolumeRace(ctx context.Context, f *framework.Framework, volumes []v1.Volume, volumeMounts []v1.VolumeMount, podCount int32) {
 	const nodeHostnameLabelKey = "kubernetes.io/hostname"
 
-	rcName := wrappedVolumeRaceRCNamePrefix + string(uuid.NewUUID())
+	rcName := wrappedVolumeRaceRCNamePrefix + string(framework.DummyUUID())
 	targetNode, err := e2enode.GetRandomReadySchedulableNode(ctx, f.ClientSet)
 	framework.ExpectNoError(err)
 

@@ -31,7 +31,6 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	clientset "k8s.io/client-go/kubernetes"
 	v1core "k8s.io/client-go/kubernetes/typed/core/v1"
@@ -579,7 +578,7 @@ func testPDPod(diskNames []string, targetNode types.NodeName, readOnly bool, num
 			APIVersion: "v1",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name: "pd-test-" + string(uuid.NewUUID()),
+			Name: "pd-test-" + string(framework.DummyUUID()),
 		},
 		Spec: v1.PodSpec{
 			Containers: containers,

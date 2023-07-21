@@ -24,8 +24,8 @@ import (
 	v1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	podutil "k8s.io/kubernetes/pkg/api/v1/pod"
+	"k8s.io/kubernetes/test/e2e/framework"
 	e2epod "k8s.io/kubernetes/test/e2e/framework/pod"
 )
 
@@ -51,7 +51,7 @@ type ConformanceContainer struct {
 
 // Create creates the defined conformance container
 func (cc *ConformanceContainer) Create(ctx context.Context) {
-	cc.podName = cc.Container.Name + string(uuid.NewUUID())
+	cc.podName = cc.Container.Name + string(framework.DummyUUID())
 	imagePullSecrets := []v1.LocalObjectReference{}
 	for _, s := range cc.ImagePullSecrets {
 		imagePullSecrets = append(imagePullSecrets, v1.LocalObjectReference{Name: s})

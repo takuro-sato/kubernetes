@@ -23,7 +23,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2epodoutput "k8s.io/kubernetes/test/e2e/framework/pod/output"
 	imageutils "k8s.io/kubernetes/test/utils/image"
@@ -38,7 +37,7 @@ var _ = SIGDescribe("Downward API [Serial] [Disruptive] [Feature:EphemeralStorag
 
 	ginkgo.Context("Downward API tests for local ephemeral storage", func() {
 		ginkgo.It("should provide container's limits.ephemeral-storage and requests.ephemeral-storage as env vars", func(ctx context.Context) {
-			podName := "downward-api-" + string(uuid.NewUUID())
+			podName := "downward-api-" + string(framework.DummyUUID())
 			env := []v1.EnvVar{
 				{
 					Name: "EPHEMERAL_STORAGE_LIMIT",
@@ -66,7 +65,7 @@ var _ = SIGDescribe("Downward API [Serial] [Disruptive] [Feature:EphemeralStorag
 		})
 
 		ginkgo.It("should provide default limits.ephemeral-storage from node allocatable", func(ctx context.Context) {
-			podName := "downward-api-" + string(uuid.NewUUID())
+			podName := "downward-api-" + string(framework.DummyUUID())
 			env := []v1.EnvVar{
 				{
 					Name: "EPHEMERAL_STORAGE_LIMIT",

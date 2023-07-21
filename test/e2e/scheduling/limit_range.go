@@ -32,7 +32,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	utilrand "k8s.io/apimachinery/pkg/util/rand"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/tools/cache"
@@ -65,7 +64,7 @@ var _ = SIGDescribe("LimitRange", func() {
 		defaultLimit := getResourceList("500m", "500Mi", "500Gi")
 		defaultRequest := getResourceList("100m", "200Mi", "200Gi")
 		maxLimitRequestRatio := v1.ResourceList{}
-		value := strconv.Itoa(time.Now().Nanosecond()) + string(uuid.NewUUID())
+		value := strconv.Itoa(time.Now().Nanosecond()) + string(framework.DummyUUID())
 		limitRange := newLimitRange("limit-range", value, v1.LimitTypeContainer,
 			min, max,
 			defaultLimit, defaultRequest,

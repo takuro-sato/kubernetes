@@ -25,7 +25,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/fields"
 	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2epod "k8s.io/kubernetes/test/e2e/framework/pod"
@@ -43,7 +42,7 @@ var _ = SIGDescribe("Events", func() {
 		podClient := f.ClientSet.CoreV1().Pods(f.Namespace.Name)
 
 		ginkgo.By("creating the pod")
-		name := "send-events-" + string(uuid.NewUUID())
+		name := "send-events-" + string(framework.DummyUUID())
 		value := strconv.Itoa(time.Now().Nanosecond())
 		pod := &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{

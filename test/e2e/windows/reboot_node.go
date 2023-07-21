@@ -24,7 +24,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"k8s.io/apimachinery/pkg/util/uuid"
 	podutil "k8s.io/kubernetes/pkg/api/v1/pod"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2epod "k8s.io/kubernetes/test/e2e/framework/pod"
@@ -51,7 +50,7 @@ var _ = SIGDescribe("[Feature:Windows] [Excluded:WindowsDocker] [MinimumKubeletV
 		windowsImage := imageutils.GetE2EImage(imageutils.Agnhost)
 
 		// Create Windows pod on the selected Windows node Using Agnhost
-		podName := "pod-" + string(uuid.NewUUID())
+		podName := "pod-" + string(framework.DummyUUID())
 		agnPod := &v1.Pod{
 			TypeMeta: metav1.TypeMeta{
 				Kind:       "Pod",
@@ -78,7 +77,7 @@ var _ = SIGDescribe("[Feature:Windows] [Excluded:WindowsDocker] [MinimumKubeletV
 
 		// Create Linux pod to ping the windows pod
 		linuxBusyBoxImage := imageutils.GetE2EImage(imageutils.Nginx)
-		podName = "pod-" + string(uuid.NewUUID())
+		podName = "pod-" + string(framework.DummyUUID())
 		nginxPod := &v1.Pod{
 			TypeMeta: metav1.TypeMeta{
 				Kind:       "Pod",

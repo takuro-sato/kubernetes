@@ -37,7 +37,6 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/dynamic"
 	clientset "k8s.io/client-go/kubernetes"
@@ -425,7 +424,7 @@ var _ = SIGDescribe("AdmissionWebhook [Privileged:ClusterAdmin]", func() {
 
 		ginkgo.By("Creating a configMap that does not comply to the validation webhook rules")
 		err = wait.PollImmediate(100*time.Millisecond, 30*time.Second, func() (bool, error) {
-			cm := namedNonCompliantConfigMap(string(uuid.NewUUID()), f)
+			cm := namedNonCompliantConfigMap(string(framework.DummyUUID()), f)
 			_, err = client.CoreV1().ConfigMaps(f.Namespace.Name).Create(ctx, cm, metav1.CreateOptions{})
 			if err == nil {
 				err = client.CoreV1().ConfigMaps(f.Namespace.Name).Delete(ctx, cm.Name, metav1.DeleteOptions{})
@@ -450,7 +449,7 @@ var _ = SIGDescribe("AdmissionWebhook [Privileged:ClusterAdmin]", func() {
 
 		ginkgo.By("Creating a configMap that does not comply to the validation webhook rules")
 		err = wait.PollImmediate(100*time.Millisecond, 30*time.Second, func() (bool, error) {
-			cm := namedNonCompliantConfigMap(string(uuid.NewUUID()), f)
+			cm := namedNonCompliantConfigMap(string(framework.DummyUUID()), f)
 			_, err = client.CoreV1().ConfigMaps(f.Namespace.Name).Create(ctx, cm, metav1.CreateOptions{})
 			if err != nil {
 				if !strings.Contains(err.Error(), "denied") {
@@ -472,7 +471,7 @@ var _ = SIGDescribe("AdmissionWebhook [Privileged:ClusterAdmin]", func() {
 
 		ginkgo.By("Creating a configMap that does not comply to the validation webhook rules")
 		err = wait.PollImmediate(100*time.Millisecond, 30*time.Second, func() (bool, error) {
-			cm := namedNonCompliantConfigMap(string(uuid.NewUUID()), f)
+			cm := namedNonCompliantConfigMap(string(framework.DummyUUID()), f)
 			_, err = client.CoreV1().ConfigMaps(f.Namespace.Name).Create(ctx, cm, metav1.CreateOptions{})
 			if err == nil {
 				err = client.CoreV1().ConfigMaps(f.Namespace.Name).Delete(ctx, cm.Name, metav1.DeleteOptions{})
@@ -527,7 +526,7 @@ var _ = SIGDescribe("AdmissionWebhook [Privileged:ClusterAdmin]", func() {
 
 		ginkgo.By("Creating a configMap that should not be mutated")
 		err = wait.PollImmediate(100*time.Millisecond, 30*time.Second, func() (bool, error) {
-			cm := namedToBeMutatedConfigMap(string(uuid.NewUUID()), f)
+			cm := namedToBeMutatedConfigMap(string(framework.DummyUUID()), f)
 			created, err := client.CoreV1().ConfigMaps(f.Namespace.Name).Create(ctx, cm, metav1.CreateOptions{})
 			if err != nil {
 				return false, err
@@ -547,7 +546,7 @@ var _ = SIGDescribe("AdmissionWebhook [Privileged:ClusterAdmin]", func() {
 
 		ginkgo.By("Creating a configMap that should be mutated")
 		err = wait.PollImmediate(100*time.Millisecond, 30*time.Second, func() (bool, error) {
-			cm := namedToBeMutatedConfigMap(string(uuid.NewUUID()), f)
+			cm := namedToBeMutatedConfigMap(string(framework.DummyUUID()), f)
 			created, err := client.CoreV1().ConfigMaps(f.Namespace.Name).Create(ctx, cm, metav1.CreateOptions{})
 			if err != nil {
 				return false, err
@@ -570,7 +569,7 @@ var _ = SIGDescribe("AdmissionWebhook [Privileged:ClusterAdmin]", func() {
 	*/
 	framework.ConformanceIt("listing validating webhooks should work", func(ctx context.Context) {
 		testListSize := 10
-		testUUID := string(uuid.NewUUID())
+		testUUID := string(framework.DummyUUID())
 
 		for i := 0; i < testListSize; i++ {
 			name := fmt.Sprintf("%s-%d", f.UniqueName, i)
@@ -599,7 +598,7 @@ var _ = SIGDescribe("AdmissionWebhook [Privileged:ClusterAdmin]", func() {
 
 		ginkgo.By("Creating a configMap that does not comply to the validation webhook rules")
 		err = wait.PollImmediate(100*time.Millisecond, 30*time.Second, func() (bool, error) {
-			cm := namedNonCompliantConfigMap(string(uuid.NewUUID()), f)
+			cm := namedNonCompliantConfigMap(string(framework.DummyUUID()), f)
 			_, err = client.CoreV1().ConfigMaps(f.Namespace.Name).Create(ctx, cm, metav1.CreateOptions{})
 			if err == nil {
 				err = client.CoreV1().ConfigMaps(f.Namespace.Name).Delete(ctx, cm.Name, metav1.DeleteOptions{})
@@ -619,7 +618,7 @@ var _ = SIGDescribe("AdmissionWebhook [Privileged:ClusterAdmin]", func() {
 
 		ginkgo.By("Creating a configMap that does not comply to the validation webhook rules")
 		err = wait.PollImmediate(100*time.Millisecond, 30*time.Second, func() (bool, error) {
-			cm := namedNonCompliantConfigMap(string(uuid.NewUUID()), f)
+			cm := namedNonCompliantConfigMap(string(framework.DummyUUID()), f)
 			_, err = client.CoreV1().ConfigMaps(f.Namespace.Name).Create(ctx, cm, metav1.CreateOptions{})
 			if err != nil {
 				if !strings.Contains(err.Error(), "denied") {
@@ -644,7 +643,7 @@ var _ = SIGDescribe("AdmissionWebhook [Privileged:ClusterAdmin]", func() {
 	*/
 	framework.ConformanceIt("listing mutating webhooks should work", func(ctx context.Context) {
 		testListSize := 10
-		testUUID := string(uuid.NewUUID())
+		testUUID := string(framework.DummyUUID())
 
 		for i := 0; i < testListSize; i++ {
 			name := fmt.Sprintf("%s-%d", f.UniqueName, i)
@@ -673,7 +672,7 @@ var _ = SIGDescribe("AdmissionWebhook [Privileged:ClusterAdmin]", func() {
 
 		ginkgo.By("Creating a configMap that should be mutated")
 		err = wait.PollImmediate(100*time.Millisecond, 30*time.Second, func() (bool, error) {
-			cm := namedToBeMutatedConfigMap(string(uuid.NewUUID()), f)
+			cm := namedToBeMutatedConfigMap(string(framework.DummyUUID()), f)
 			created, err := client.CoreV1().ConfigMaps(f.Namespace.Name).Create(ctx, cm, metav1.CreateOptions{})
 			if err != nil {
 				return false, err
@@ -691,7 +690,7 @@ var _ = SIGDescribe("AdmissionWebhook [Privileged:ClusterAdmin]", func() {
 
 		ginkgo.By("Creating a configMap that should not be mutated")
 		err = wait.PollImmediate(100*time.Millisecond, 30*time.Second, func() (bool, error) {
-			cm := namedToBeMutatedConfigMap(string(uuid.NewUUID()), f)
+			cm := namedToBeMutatedConfigMap(string(framework.DummyUUID()), f)
 			created, err := client.CoreV1().ConfigMaps(f.Namespace.Name).Create(ctx, cm, metav1.CreateOptions{})
 			if err != nil {
 				return false, err
@@ -2343,7 +2342,7 @@ func waitWebhookConfigurationReady(ctx context.Context, f *framework.Framework, 
 	return wait.PollImmediate(100*time.Millisecond, 30*time.Second, func() (bool, error) {
 		marker := &v1.ConfigMap{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: string(uuid.NewUUID()),
+				Name: string(framework.DummyUUID()),
 				Labels: map[string]string{
 					f.UniqueName: "true",
 				},

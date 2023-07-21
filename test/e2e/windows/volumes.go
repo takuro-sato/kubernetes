@@ -22,7 +22,6 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2epod "k8s.io/kubernetes/test/e2e/framework/pod"
 	e2eskipper "k8s.io/kubernetes/test/e2e/framework/skipper"
@@ -91,7 +90,7 @@ var _ = SIGDescribe("[Feature:Windows] Windows volume mounts ", func() {
 func doReadOnlyTest(ctx context.Context, f *framework.Framework, source v1.VolumeSource, volumePath string) {
 	var (
 		filePath = volumePath + "\\test-file.txt"
-		podName  = "pod-" + string(uuid.NewUUID())
+		podName  = "pod-" + string(framework.DummyUUID())
 		pod      = testPodWithROVolume(podName, source, volumePath)
 	)
 	pod.Spec.NodeSelector = map[string]string{
@@ -111,8 +110,8 @@ func doReadOnlyTest(ctx context.Context, f *framework.Framework, source v1.Volum
 
 func doReadWriteReadOnlyTest(ctx context.Context, f *framework.Framework, source v1.VolumeSource, volumePath string) {
 	var (
-		filePath        = volumePath + "\\test-file" + string(uuid.NewUUID())
-		podName         = "pod-" + string(uuid.NewUUID())
+		filePath        = volumePath + "\\test-file" + string(framework.DummyUUID())
+		podName         = "pod-" + string(framework.DummyUUID())
 		pod             = testPodWithROVolume(podName, source, volumePath)
 		rwcontainerName = containerName + "-rw"
 	)

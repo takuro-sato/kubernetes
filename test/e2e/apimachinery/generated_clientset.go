@@ -27,7 +27,6 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2epod "k8s.io/kubernetes/test/e2e/framework/pod"
@@ -105,7 +104,7 @@ var _ = SIGDescribe("Generated clientset", func() {
 	ginkgo.It("should create pods, set the deletionTimestamp and deletionGracePeriodSeconds of the pod", func(ctx context.Context) {
 		podClient := f.ClientSet.CoreV1().Pods(f.Namespace.Name)
 		ginkgo.By("constructing the pod")
-		name := "pod" + string(uuid.NewUUID())
+		name := "pod" + string(framework.DummyUUID())
 		value := strconv.Itoa(time.Now().Nanosecond())
 		podCopy := testingPod(name, value)
 		pod := &podCopy
@@ -219,7 +218,7 @@ var _ = SIGDescribe("Generated clientset", func() {
 	ginkgo.It("should create v1 cronJobs, delete cronJobs, watch cronJobs", func(ctx context.Context) {
 		cronJobClient := f.ClientSet.BatchV1().CronJobs(f.Namespace.Name)
 		ginkgo.By("constructing the cronJob")
-		name := "cronjob" + string(uuid.NewUUID())
+		name := "cronjob" + string(framework.DummyUUID())
 		value := strconv.Itoa(time.Now().Nanosecond())
 		cronJob := newTestingCronJob(name, value)
 		ginkgo.By("setting up watch")

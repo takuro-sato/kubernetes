@@ -34,7 +34,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/fields"
 	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/apimachinery/pkg/watch"
 	v1core "k8s.io/client-go/kubernetes/typed/core/v1"
@@ -69,7 +68,7 @@ var _ = SIGDescribe("Pods Extended", func() {
 		*/
 		ginkgo.It("should be submitted and removed", func(ctx context.Context) {
 			ginkgo.By("creating the pod")
-			name := "pod-submit-remove-" + string(uuid.NewUUID())
+			name := "pod-submit-remove-" + string(framework.DummyUUID())
 			value := strconv.Itoa(time.Now().Nanosecond())
 			pod := e2epod.NewAgnhostPod(f.Namespace.Name, name, nil, nil, nil)
 			pod.ObjectMeta.Labels = map[string]string{
@@ -162,7 +161,7 @@ var _ = SIGDescribe("Pods Extended", func() {
 		*/
 		framework.ConformanceIt("should be set on Pods with matching resource requests and limits for memory and cpu", func(ctx context.Context) {
 			ginkgo.By("creating the pod")
-			name := "pod-qos-class-" + string(uuid.NewUUID())
+			name := "pod-qos-class-" + string(framework.DummyUUID())
 			pod := &v1.Pod{
 				ObjectMeta: metav1.ObjectMeta{
 					Name: name,
@@ -234,7 +233,7 @@ var _ = SIGDescribe("Pods Extended", func() {
 		ginkgo.It("should not create extra sandbox if all containers are done", func(ctx context.Context) {
 			ginkgo.By("creating the pod that should always exit 0")
 
-			name := "pod-always-succeed" + string(uuid.NewUUID())
+			name := "pod-always-succeed" + string(framework.DummyUUID())
 			image := imageutils.GetE2EImage(imageutils.BusyBox)
 			pod := &v1.Pod{
 				ObjectMeta: metav1.ObjectMeta{
@@ -304,7 +303,7 @@ var _ = SIGDescribe("Pods Extended", func() {
 		ginkgo.It("evicted pods should be terminal", func(ctx context.Context) {
 			ginkgo.By("creating the pod that should be evicted")
 
-			name := "pod-should-be-evicted" + string(uuid.NewUUID())
+			name := "pod-should-be-evicted" + string(framework.DummyUUID())
 			image := imageutils.GetE2EImage(imageutils.BusyBox)
 			pod := &v1.Pod{
 				ObjectMeta: metav1.ObjectMeta{
@@ -350,7 +349,7 @@ var _ = SIGDescribe("Pods Extended", func() {
 		})
 
 		ginkgo.It("pod with negative grace period", func(ctx context.Context) {
-			name := "pod-negative-grace-period" + string(uuid.NewUUID())
+			name := "pod-negative-grace-period" + string(framework.DummyUUID())
 			image := imageutils.GetE2EImage(imageutils.BusyBox)
 			pod := &v1.Pod{
 				ObjectMeta: metav1.ObjectMeta{

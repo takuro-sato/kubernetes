@@ -33,7 +33,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/util/errors"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	clientset "k8s.io/client-go/kubernetes"
 	v1qos "k8s.io/kubernetes/pkg/apis/core/v1/helper/qos"
@@ -452,7 +451,7 @@ func createBalancedPodForNodes(ctx context.Context, f *framework.Framework, cs c
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			err := testutils.StartPods(cs, 1, ns, string(uuid.NewUUID()),
+			err := testutils.StartPods(cs, 1, ns, string(framework.DummyUUID()),
 				*initPausePod(f, *podConfig), true, framework.Logf)
 			if err != nil {
 				errChan <- err
@@ -548,8 +547,8 @@ func getNonZeroRequests(pod *v1.Pod) Resource {
 
 func getRandomTaint() v1.Taint {
 	return v1.Taint{
-		Key:    fmt.Sprintf("kubernetes.io/e2e-scheduling-priorities-%s", string(uuid.NewUUID()[:23])),
-		Value:  fmt.Sprintf("testing-taint-value-%s", string(uuid.NewUUID())),
+		Key:    fmt.Sprintf("kubernetes.io/e2e-scheduling-priorities-%s", string(framework.DummyUUID()[:23])),
+		Value:  fmt.Sprintf("testing-taint-value-%s", string(framework.DummyUUID())),
 		Effect: v1.TaintEffectPreferNoSchedule,
 	}
 }

@@ -24,7 +24,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2epodoutput "k8s.io/kubernetes/test/e2e/framework/pod/output"
 	imageutils "k8s.io/kubernetes/test/utils/image"
@@ -43,7 +42,7 @@ var _ = SIGDescribe("ConfigMap", func() {
 		Description: Create a Pod with an environment variable value set using a value from ConfigMap. A ConfigMap value MUST be accessible in the container environment.
 	*/
 	framework.ConformanceIt("should be consumable via environment variable [NodeConformance]", func(ctx context.Context) {
-		name := "configmap-test-" + string(uuid.NewUUID())
+		name := "configmap-test-" + string(framework.DummyUUID())
 		configMap := newConfigMap(f, name)
 		ginkgo.By(fmt.Sprintf("Creating configMap %v/%v", f.Namespace.Name, configMap.Name))
 		var err error
@@ -53,7 +52,7 @@ var _ = SIGDescribe("ConfigMap", func() {
 
 		pod := &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "pod-configmaps-" + string(uuid.NewUUID()),
+				Name: "pod-configmaps-" + string(framework.DummyUUID()),
 			},
 			Spec: v1.PodSpec{
 				Containers: []v1.Container{
@@ -91,7 +90,7 @@ var _ = SIGDescribe("ConfigMap", func() {
 		Description: Create a Pod with a environment source from ConfigMap. All ConfigMap values MUST be available as environment variables in the container.
 	*/
 	framework.ConformanceIt("should be consumable via the environment [NodeConformance]", func(ctx context.Context) {
-		name := "configmap-test-" + string(uuid.NewUUID())
+		name := "configmap-test-" + string(framework.DummyUUID())
 		configMap := newConfigMap(f, name)
 		ginkgo.By(fmt.Sprintf("Creating configMap %v/%v", f.Namespace.Name, configMap.Name))
 		var err error
@@ -101,7 +100,7 @@ var _ = SIGDescribe("ConfigMap", func() {
 
 		pod := &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "pod-configmaps-" + string(uuid.NewUUID()),
+				Name: "pod-configmaps-" + string(framework.DummyUUID()),
 			},
 			Spec: v1.PodSpec{
 				Containers: []v1.Container{
@@ -141,7 +140,7 @@ var _ = SIGDescribe("ConfigMap", func() {
 	})
 
 	ginkgo.It("should update ConfigMap successfully", func(ctx context.Context) {
-		name := "configmap-test-" + string(uuid.NewUUID())
+		name := "configmap-test-" + string(framework.DummyUUID())
 		configMap := newConfigMap(f, name)
 		ginkgo.By(fmt.Sprintf("Creating ConfigMap %v/%v", f.Namespace.Name, configMap.Name))
 		_, err := f.ClientSet.CoreV1().ConfigMaps(f.Namespace.Name).Create(ctx, configMap, metav1.CreateOptions{})
@@ -168,7 +167,7 @@ var _ = SIGDescribe("ConfigMap", func() {
 	*/
 	framework.ConformanceIt("should run through a ConfigMap lifecycle", func(ctx context.Context) {
 		testNamespaceName := f.Namespace.Name
-		testConfigMapName := "test-configmap" + string(uuid.NewUUID())
+		testConfigMapName := "test-configmap" + string(framework.DummyUUID())
 
 		testConfigMap := v1.ConfigMap{
 			ObjectMeta: metav1.ObjectMeta{
@@ -258,7 +257,7 @@ func newConfigMap(f *framework.Framework, name string) *v1.ConfigMap {
 }
 
 func newConfigMapWithEmptyKey(ctx context.Context, f *framework.Framework) (*v1.ConfigMap, error) {
-	name := "configmap-test-emptyKey-" + string(uuid.NewUUID())
+	name := "configmap-test-emptyKey-" + string(framework.DummyUUID())
 	configMap := &v1.ConfigMap{
 		ObjectMeta: metav1.ObjectMeta{
 			Namespace: f.Namespace.Name,

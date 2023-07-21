@@ -28,7 +28,6 @@ import (
 
 	"github.com/onsi/ginkgo/v2"
 	v1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 )
 
@@ -95,7 +94,7 @@ func NewLocalResourceManager(prefix string, hostExec HostExec, hostBase string) 
 
 // getTestDir returns a test dir under `hostBase` directory with randome name.
 func (l *ltrMgr) getTestDir() string {
-	testDirName := fmt.Sprintf("%s-%s", l.prefix, string(uuid.NewUUID()))
+	testDirName := fmt.Sprintf("%s-%s", l.prefix, string(framework.DummyUUID()))
 	return filepath.Join(l.hostBase, testDirName)
 }
 
