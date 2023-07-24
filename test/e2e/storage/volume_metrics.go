@@ -497,7 +497,7 @@ var _ = utils.SIGDescribe("[Serial] Volume metrics", func() {
 	})
 
 	// Test for pv controller metrics, concretely: bound/unbound pv/pvc count.
-	ginkgo.Describe("PVController", ginkgo.Ordered, func() {
+	ginkgo.Describe("PVController", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		const (
 			classKey      = "storage_class"
 			namespaceKey  = "namespace"

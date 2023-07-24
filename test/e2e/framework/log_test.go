@@ -44,7 +44,7 @@ func failHelper(msg string) {
 	framework.Fail(msg)
 }
 
-var _ = ginkgo.Describe("log", ginkgo.Ordered, func() {
+var _ = ginkgo.Describe("log", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 	ginkgo.BeforeEach(func() {
 		framework.Logf("before")
 	})

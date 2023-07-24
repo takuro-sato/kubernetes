@@ -78,7 +78,7 @@ var _ = utils.SIGDescribe("[Feature:NodeOutOfServiceVolumeDetach] [Disruptive] [
 		}
 	})
 
-	ginkgo.Describe("[NonGracefulNodeShutdown] pod that uses a persistent volume via gce pd driver", ginkgo.Ordered, func() {
+	ginkgo.Describe("[NonGracefulNodeShutdown] pod that uses a persistent volume via gce pd driver", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		ginkgo.It("should get immediately rescheduled to a different node after non graceful node shutdown ", func(ctx context.Context) {
 			// Install gce pd csi driver
 			ginkgo.By("deploying csi gce-pd driver")

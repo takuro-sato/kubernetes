@@ -56,7 +56,7 @@ var _ = SIGDescribe("[Disruptive]NodeLease", func() {
 		}
 	})
 
-	ginkgo.Describe("NodeLease deletion", ginkgo.Ordered, func() {
+	ginkgo.Describe("NodeLease deletion", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		var skipped bool
 
 		ginkgo.BeforeEach(func() {

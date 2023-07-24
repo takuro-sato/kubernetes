@@ -38,7 +38,7 @@ var _ = SIGDescribe("[Feature:ClusterSizeAutoscalingScaleUp] [Slow] Autoscaling"
 	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
 	var experiment *gmeasure.Experiment
 
-	ginkgo.Describe("Autoscaling a service", ginkgo.Ordered, func() {
+	ginkgo.Describe("Autoscaling a service", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		ginkgo.BeforeEach(func(ctx context.Context) {
 			// Check if Cloud Autoscaler is enabled by trying to get its ConfigMap.
 			_, err := f.ClientSet.CoreV1().ConfigMaps("kube-system").Get(ctx, "cluster-autoscaler-status", metav1.GetOptions{})

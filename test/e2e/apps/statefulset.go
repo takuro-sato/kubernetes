@@ -102,7 +102,7 @@ var _ = SIGDescribe("StatefulSet", func() {
 		ns = f.Namespace.Name
 	})
 
-	ginkgo.Describe("Basic StatefulSet functionality [StatefulSetBasic]", ginkgo.Ordered, func() {
+	ginkgo.Describe("Basic StatefulSet functionality [StatefulSetBasic]", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		ssName := "ss"
 		labels := map[string]string{
 			"foo": "bar",
@@ -1105,7 +1105,7 @@ var _ = SIGDescribe("StatefulSet", func() {
 		})
 	})
 
-	ginkgo.Describe("Deploy clustered applications [Feature:StatefulSet] [Slow]", ginkgo.Ordered, func() {
+	ginkgo.Describe("Deploy clustered applications [Feature:StatefulSet] [Slow]", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		var appTester *clusterAppTester
 
 		ginkgo.BeforeEach(func(ctx context.Context) {
@@ -1214,7 +1214,7 @@ var _ = SIGDescribe("StatefulSet", func() {
 		}
 	})
 
-	ginkgo.Describe("Non-retain StatefulSetPersistentVolumeClaimPolicy", ginkgo.Ordered, func() {
+	ginkgo.Describe("Non-retain StatefulSetPersistentVolumeClaimPolicy", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		ssName := "ss"
 		labels := map[string]string{
 			"foo": "bar",
@@ -1352,7 +1352,7 @@ var _ = SIGDescribe("StatefulSet", func() {
 		})
 	})
 
-	ginkgo.Describe("Automatically recreate PVC for pending pod when PVC is missing", ginkgo.Ordered, func() {
+	ginkgo.Describe("Automatically recreate PVC for pending pod when PVC is missing", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		ssName := "ss"
 		labels := map[string]string{
 			"foo": "bar",
@@ -1461,7 +1461,7 @@ var _ = SIGDescribe("StatefulSet", func() {
 		})
 	})
 
-	ginkgo.Describe("Scaling StatefulSetStartOrdinal [Feature:StatefulSetStartOrdinal]", ginkgo.Ordered, func() {
+	ginkgo.Describe("Scaling StatefulSetStartOrdinal [Feature:StatefulSetStartOrdinal]", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		ssName := "ss"
 		labels := map[string]string{
 			"foo": "bar",

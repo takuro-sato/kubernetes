@@ -50,7 +50,7 @@ func networkResources() app.Resources {
 	}
 }
 
-var _ = ginkgo.Describe("[sig-node] DRA [Feature:DynamicResourceAllocation]", ginkgo.Ordered, func() {
+var _ = ginkgo.Describe("[sig-node] DRA [Feature:DynamicResourceAllocation]", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 	f := framework.NewDefaultFramework("dra")
 
 	// The driver containers have to run with sufficient privileges to

@@ -63,7 +63,7 @@ var _ = SIGDescribe("[Feature:HPA] [Serial] [Slow] Horizontal pod autoscaling (n
 
 	waitBuffer := 1 * time.Minute
 
-	ginkgo.Describe("with short downscale stabilization window", ginkgo.Ordered, func() {
+	ginkgo.Describe("with short downscale stabilization window", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		ginkgo.It("should scale down soon after the stabilization period", func(ctx context.Context) {
 			ginkgo.By("setting up resource consumer and HPA")
 			initPods := 1
@@ -104,7 +104,7 @@ var _ = SIGDescribe("[Feature:HPA] [Serial] [Slow] Horizontal pod autoscaling (n
 		})
 	})
 
-	ginkgo.Describe("with long upscale stabilization window", ginkgo.Ordered, func() {
+	ginkgo.Describe("with long upscale stabilization window", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		ginkgo.It("should scale up only after the stabilization period", func(ctx context.Context) {
 			ginkgo.By("setting up resource consumer and HPA")
 			initPods := 2
@@ -145,7 +145,7 @@ var _ = SIGDescribe("[Feature:HPA] [Serial] [Slow] Horizontal pod autoscaling (n
 		})
 	})
 
-	ginkgo.Describe("with autoscaling disabled", ginkgo.Ordered, func() {
+	ginkgo.Describe("with autoscaling disabled", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		ginkgo.It("shouldn't scale up", func(ctx context.Context) {
 			ginkgo.By("setting up resource consumer and HPA")
 			initPods := 1
@@ -219,7 +219,7 @@ var _ = SIGDescribe("[Feature:HPA] [Serial] [Slow] Horizontal pod autoscaling (n
 
 	})
 
-	ginkgo.Describe("with scale limited by number of Pods rate", ginkgo.Ordered, func() {
+	ginkgo.Describe("with scale limited by number of Pods rate", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		ginkgo.It("should scale up no more than given number of Pods per minute", func(ctx context.Context) {
 			ginkgo.By("setting up resource consumer and HPA")
 			initPods := 1
@@ -305,7 +305,7 @@ var _ = SIGDescribe("[Feature:HPA] [Serial] [Slow] Horizontal pod autoscaling (n
 		})
 	})
 
-	ginkgo.Describe("with scale limited by percentage", ginkgo.Ordered, func() {
+	ginkgo.Describe("with scale limited by percentage", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		ginkgo.It("should scale up no more than given percentage of current Pods per minute", func(ctx context.Context) {
 			ginkgo.By("setting up resource consumer and HPA")
 			initPods := 2
@@ -393,7 +393,7 @@ var _ = SIGDescribe("[Feature:HPA] [Serial] [Slow] Horizontal pod autoscaling (n
 		})
 	})
 
-	ginkgo.Describe("with both scale up and down controls configured", ginkgo.Ordered, func() {
+	ginkgo.Describe("with both scale up and down controls configured", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		waitBuffer := 2 * time.Minute
 
 		ginkgo.It("should keep recommendation within the range over two stabilization windows", func(ctx context.Context) {

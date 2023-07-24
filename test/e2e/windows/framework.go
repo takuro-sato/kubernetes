@@ -24,7 +24,7 @@ import (
 
 // SIGDescribe annotates the test with the SIG label.
 func SIGDescribe(text string, body func()) bool {
-	return ginkgo.Describe("[sig-windows] "+text, ginkgo.Ordered, func() {
+	return ginkgo.Describe("[sig-windows] "+text, ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		ginkgo.BeforeEach(func() {
 			// all tests in this package are Windows specific
 			e2eskipper.SkipUnlessNodeOSDistroIs("windows")

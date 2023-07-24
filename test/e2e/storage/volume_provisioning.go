@@ -86,7 +86,7 @@ var _ = utils.SIGDescribe("Dynamic Provisioning", func() {
 		timeouts = f.Timeouts
 	})
 
-	ginkgo.Describe("DynamicProvisioner [Slow] [Feature:StorageProvider]", ginkgo.Ordered, func() {
+	ginkgo.Describe("DynamicProvisioner [Slow] [Feature:StorageProvider]", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		ginkgo.It("should provision storage with different parameters", func(ctx context.Context) {
 
 			// This test checks that dynamic provisioning can provision a volume
@@ -458,7 +458,7 @@ var _ = utils.SIGDescribe("Dynamic Provisioning", func() {
 		})
 	})
 
-	ginkgo.Describe("DynamicProvisioner External", ginkgo.Ordered, func() {
+	ginkgo.Describe("DynamicProvisioner External", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		ginkgo.It("should let an external dynamic provisioner create and delete persistent volumes [Slow]", func(ctx context.Context) {
 			// external dynamic provisioner pods need additional permissions provided by the
 			// persistent-volume-provisioner clusterrole and a leader-locking role
@@ -522,7 +522,7 @@ var _ = utils.SIGDescribe("Dynamic Provisioning", func() {
 		})
 	})
 
-	ginkgo.Describe("DynamicProvisioner Default", ginkgo.Ordered, func() {
+	ginkgo.Describe("DynamicProvisioner Default", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		ginkgo.It("should create and delete default persistent volumes [Slow]", func(ctx context.Context) {
 			e2eskipper.SkipUnlessProviderIs("openstack", "gce", "aws", "gke", "vsphere", "azure")
 			e2epv.SkipIfNoDefaultStorageClass(ctx, c)
@@ -623,7 +623,7 @@ var _ = utils.SIGDescribe("Dynamic Provisioning", func() {
 		})
 	})
 
-	ginkgo.Describe("Invalid AWS KMS key", ginkgo.Ordered, func() {
+	ginkgo.Describe("Invalid AWS KMS key", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		ginkgo.It("should report an error and create no PV", func(ctx context.Context) {
 			e2eskipper.SkipUnlessProviderIs("aws")
 			test := testsuites.StorageClassTest{

@@ -218,7 +218,7 @@ var _ = SIGDescribe("Kubelet [Serial] [Slow]", func() {
 		result := om.GetLatestRuntimeOperationErrorRate(ctx)
 		framework.Logf("runtime operation error metrics:\n%s", e2ekubelet.FormatRuntimeOperationErrorRate(result))
 	})
-	ginkgo.Describe("regular resource usage tracking [Feature:RegularResourceUsageTracking]", ginkgo.Ordered, func() {
+	ginkgo.Describe("regular resource usage tracking [Feature:RegularResourceUsageTracking]", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		// We assume that the scheduler will make reasonable scheduling choices
 		// and assign ~N pods on the node.
 		// Although we want to track N pods per node, there are N + add-on pods
@@ -270,7 +270,7 @@ var _ = SIGDescribe("Kubelet [Serial] [Slow]", func() {
 			})
 		}
 	})
-	ginkgo.Describe("experimental resource usage tracking [Feature:ExperimentalResourceUsageTracking]", ginkgo.Ordered, func() {
+	ginkgo.Describe("experimental resource usage tracking [Feature:ExperimentalResourceUsageTracking]", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		density := []int{100}
 		for i := range density {
 			podsPerNode := density[i]

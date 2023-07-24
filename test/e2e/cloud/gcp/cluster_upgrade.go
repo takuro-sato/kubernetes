@@ -59,7 +59,7 @@ var _ = SIGDescribe("Upgrade [Feature:Upgrade]", func() {
 
 	// Create the frameworks here because we can only create them
 	// in a "Describe".
-	ginkgo.Describe("master upgrade", ginkgo.Ordered, func() {
+	ginkgo.Describe("master upgrade", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		ginkgo.It("should maintain a functioning cluster [Feature:MasterUpgrade]", func(ctx context.Context) {
 			upgCtx, err := common.GetUpgradeContext(f.ClientSet.Discovery())
 			framework.ExpectNoError(err)
@@ -76,7 +76,7 @@ var _ = SIGDescribe("Upgrade [Feature:Upgrade]", func() {
 		})
 	})
 
-	ginkgo.Describe("cluster upgrade", ginkgo.Ordered, func() {
+	ginkgo.Describe("cluster upgrade", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		ginkgo.It("should maintain a functioning cluster [Feature:ClusterUpgrade]", func(ctx context.Context) {
 			upgCtx, err := common.GetUpgradeContext(f.ClientSet.Discovery())
 			framework.ExpectNoError(err)
@@ -96,7 +96,7 @@ var _ = SIGDescribe("Downgrade [Feature:Downgrade]", func() {
 	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
 	testFrameworks := upgrades.CreateUpgradeFrameworks(upgradeTests)
 
-	ginkgo.Describe("cluster downgrade", ginkgo.Ordered, func() {
+	ginkgo.Describe("cluster downgrade", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 		ginkgo.It("should maintain a functioning cluster [Feature:ClusterDowngrade]", func(ctx context.Context) {
 			upgCtx, err := common.GetUpgradeContext(f.ClientSet.Discovery())
 			framework.ExpectNoError(err)
