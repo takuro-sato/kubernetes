@@ -49,7 +49,7 @@ import (
 //
 // This must be line #50.
 
-var _ = ginkgo.Describe("pod", ginkgo.Ordered, func() {
+var _ = ginkgo.Describe("pod", func() {
 	ginkgo.It("not found, must exist", func(ctx context.Context) {
 		gomega.Eventually(ctx, framework.HandleRetry(getNoSuchPod)).WithTimeout(timeout).Should(e2epod.BeInPhase(v1.PodRunning))
 	})

@@ -38,7 +38,7 @@ var _ = SIGDescribe("ServiceAccount admission controller migration [Feature:Boun
 	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
 	testFrameworks := upgrades.CreateUpgradeFrameworks(upgradeTests)
 
-	ginkgo.Describe("master upgrade", ginkgo.Ordered, func() {
+	ginkgo.Describe("master upgrade", func() {
 		ginkgo.It("should maintain a functioning cluster", func(ctx context.Context) {
 			upgCtx, err := common.GetUpgradeContext(f.ClientSet.Discovery())
 			framework.ExpectNoError(err)

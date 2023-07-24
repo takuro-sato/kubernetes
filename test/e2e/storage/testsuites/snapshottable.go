@@ -110,7 +110,7 @@ func (s *snapshottableTestSuite) DefineTests(driver storageframework.TestDriver,
 	f := framework.NewDefaultFramework("snapshotting")
 	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
 
-	ginkgo.Describe("volume snapshot controller", ginkgo.Ordered, func() {
+	ginkgo.Describe("volume snapshot controller", func() {
 		var (
 			err    error
 			config *storageframework.PerTestConfig

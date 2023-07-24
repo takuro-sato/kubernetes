@@ -75,7 +75,7 @@ var _ = utils.SIGDescribe("Regional PD", func() {
 		e2eskipper.SkipUnlessMultizone(ctx, c)
 	})
 
-	ginkgo.Describe("RegionalPD", ginkgo.Ordered, func() {
+	ginkgo.Describe("RegionalPD", func() {
 		ginkgo.It("should provision storage [Slow]", func(ctx context.Context) {
 			testVolumeProvisioning(ctx, c, f.Timeouts, ns)
 		})

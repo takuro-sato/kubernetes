@@ -278,7 +278,7 @@ var _ = SIGDescribe("kubelet", func() {
 		ns = f.Namespace.Name
 	})
 
-	ginkgo.Describe("Clean up pods on node", ginkgo.Ordered, func() {
+	ginkgo.Describe("Clean up pods on node", func() {
 		var (
 			numNodes        int
 			nodeNames       sets.String
@@ -379,7 +379,7 @@ var _ = SIGDescribe("kubelet", func() {
 	})
 
 	// Test host cleanup when disrupting the volume environment.
-	ginkgo.Describe("host cleanup with volume mounts [HostCleanup][Flaky]", ginkgo.Ordered, func() {
+	ginkgo.Describe("host cleanup with volume mounts [HostCleanup][Flaky]", func() {
 
 		type hostCleanupTest struct {
 			itDescr string

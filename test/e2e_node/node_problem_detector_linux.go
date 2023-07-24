@@ -70,7 +70,7 @@ var _ = SIGDescribe("NodeProblemDetector [NodeFeature:NodeProblemDetector] [Seri
 	})
 
 	// Test system log monitor. We may add other tests if we have more problem daemons in the future.
-	ginkgo.Describe("SystemLogMonitor", ginkgo.Ordered, func() {
+	ginkgo.Describe("SystemLogMonitor", func() {
 		const (
 			// Use test condition to avoid changing the real node condition in use.
 			// TODO(random-liu): Now node condition could be arbitrary string, consider whether we need to

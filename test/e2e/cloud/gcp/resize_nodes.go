@@ -66,7 +66,7 @@ var _ = SIGDescribe("Nodes [Disruptive]", func() {
 	})
 
 	// Slow issue #13323 (8 min)
-	ginkgo.Describe("Resize [Slow]", ginkgo.Ordered, func() {
+	ginkgo.Describe("Resize [Slow]", func() {
 		var originalNodeCount int32
 
 		ginkgo.BeforeEach(func() {

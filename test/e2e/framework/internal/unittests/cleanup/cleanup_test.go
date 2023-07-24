@@ -59,7 +59,7 @@ func init() {
 	)
 }
 
-var _ = ginkgo.Describe("e2e", ginkgo.Ordered, func() {
+var _ = ginkgo.Describe("e2e", func() {
 	ginkgo.BeforeEach(func() {
 		framework.Logf("before")
 	})

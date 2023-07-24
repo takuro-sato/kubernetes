@@ -451,8 +451,8 @@ var _ = SIGDescribe("Kubectl Port forwarding", func() {
 	f := framework.NewDefaultFramework("port-forwarding")
 	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelBaseline
 
-	ginkgo.Describe("With a server listening on 0.0.0.0", ginkgo.Ordered, func() {
-		ginkgo.Describe("that expects a client request", ginkgo.Ordered, func() {
+	ginkgo.Describe("With a server listening on 0.0.0.0", func() {
+		ginkgo.Describe("that expects a client request", func() {
 			ginkgo.It("should support a client that connects, sends NO DATA, and disconnects", func(ctx context.Context) {
 				doTestMustConnectSendNothing(ctx, "0.0.0.0", f)
 			})
@@ -461,7 +461,7 @@ var _ = SIGDescribe("Kubectl Port forwarding", func() {
 			})
 		})
 
-		ginkgo.Describe("that expects NO client request", ginkgo.Ordered, func() {
+		ginkgo.Describe("that expects NO client request", func() {
 			ginkgo.It("should support a client that connects, sends DATA, and disconnects", func(ctx context.Context) {
 				doTestConnectSendDisconnect(ctx, "0.0.0.0", f)
 			})
@@ -473,8 +473,8 @@ var _ = SIGDescribe("Kubectl Port forwarding", func() {
 	})
 
 	// kubectl port-forward may need elevated privileges to do its job.
-	ginkgo.Describe("With a server listening on localhost", ginkgo.Ordered, func() {
-		ginkgo.Describe("that expects a client request", ginkgo.Ordered, func() {
+	ginkgo.Describe("With a server listening on localhost", func() {
+		ginkgo.Describe("that expects a client request", func() {
 			ginkgo.It("should support a client that connects, sends NO DATA, and disconnects", func(ctx context.Context) {
 				doTestMustConnectSendNothing(ctx, "localhost", f)
 			})
@@ -483,7 +483,7 @@ var _ = SIGDescribe("Kubectl Port forwarding", func() {
 			})
 		})
 
-		ginkgo.Describe("that expects NO client request", ginkgo.Ordered, func() {
+		ginkgo.Describe("that expects NO client request", func() {
 			ginkgo.It("should support a client that connects, sends DATA, and disconnects", func(ctx context.Context) {
 				doTestConnectSendDisconnect(ctx, "localhost", f)
 			})
