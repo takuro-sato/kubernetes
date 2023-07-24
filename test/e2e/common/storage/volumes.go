@@ -75,7 +75,7 @@ var _ = SIGDescribe("Volumes", func() {
 	////////////////////////////////////////////////////////////////////////
 	// NFS
 	////////////////////////////////////////////////////////////////////////
-	ginkgo.Describe("NFSv4", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
+	ginkgo.Describe("NFSv4", ginkgo.Ordered, func() {
 		ginkgo.It("should be mountable for NFSv4", func(ctx context.Context) {
 			config, _, serverHost := e2evolume.NewNFSServer(ctx, c, namespace.Name, []string{})
 			ginkgo.DeferCleanup(e2evolume.TestServerCleanup, f, config)
@@ -99,7 +99,7 @@ var _ = SIGDescribe("Volumes", func() {
 		})
 	})
 
-	ginkgo.Describe("NFSv3", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
+	ginkgo.Describe("NFSv3", ginkgo.Ordered, func() {
 		ginkgo.It("should be mountable for NFSv3", func(ctx context.Context) {
 			config, _, serverHost := e2evolume.NewNFSServer(ctx, c, namespace.Name, []string{})
 			ginkgo.DeferCleanup(e2evolume.TestServerCleanup, f, config)

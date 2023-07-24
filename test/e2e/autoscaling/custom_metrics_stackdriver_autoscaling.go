@@ -60,7 +60,7 @@ var _ = SIGDescribe("[HPA] [Feature:CustomMetricsAutoscaling] Horizontal pod aut
 	f := framework.NewDefaultFramework("horizontal-pod-autoscaling")
 	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
 
-	ginkgo.Describe("with Custom Metric of type Pod from Stackdriver", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
+	ginkgo.Describe("with Custom Metric of type Pod from Stackdriver", ginkgo.Ordered, func() {
 		ginkgo.It("should scale down", func(ctx context.Context) {
 			initialReplicas := 2
 			// metric should cause scale down
@@ -135,7 +135,7 @@ var _ = SIGDescribe("[HPA] [Feature:CustomMetricsAutoscaling] Horizontal pod aut
 		})
 	})
 
-	ginkgo.Describe("with Custom Metric of type Object from Stackdriver", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
+	ginkgo.Describe("with Custom Metric of type Object from Stackdriver", ginkgo.Ordered, func() {
 		ginkgo.It("should scale down", func(ctx context.Context) {
 			initialReplicas := 2
 			// metric should cause scale down
@@ -179,7 +179,7 @@ var _ = SIGDescribe("[HPA] [Feature:CustomMetricsAutoscaling] Horizontal pod aut
 		})
 	})
 
-	ginkgo.Describe("with External Metric from Stackdriver", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
+	ginkgo.Describe("with External Metric from Stackdriver", ginkgo.Ordered, func() {
 		ginkgo.It("should scale down with target value", func(ctx context.Context) {
 			initialReplicas := 2
 			// metric should cause scale down
@@ -270,7 +270,7 @@ var _ = SIGDescribe("[HPA] [Feature:CustomMetricsAutoscaling] Horizontal pod aut
 		})
 	})
 
-	ginkgo.Describe("with multiple metrics of different types", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
+	ginkgo.Describe("with multiple metrics of different types", ginkgo.Ordered, func() {
 		ginkgo.It("should scale up when one metric is missing (Pod and External metrics)", func(ctx context.Context) {
 			initialReplicas := 1
 			// First metric a pod metric which is missing.

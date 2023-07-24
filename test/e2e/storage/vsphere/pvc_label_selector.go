@@ -77,7 +77,7 @@ var _ = utils.SIGDescribe("PersistentVolumes [Feature:vsphere][Feature:LabelSele
 
 	})
 
-	ginkgo.Describe("Selector-Label Volume Binding:vsphere [Feature:vsphere]", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
+	ginkgo.Describe("Selector-Label Volume Binding:vsphere [Feature:vsphere]", ginkgo.Ordered, func() {
 		ginkgo.AfterEach(func(ctx context.Context) {
 			ginkgo.By("Running clean up actions")
 			if framework.ProviderIs("vsphere") {

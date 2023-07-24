@@ -31,7 +31,7 @@ var _ = SIGDescribe("Networking", func() {
 	f := framework.NewDefaultFramework("pod-network-test")
 	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelPrivileged
 
-	ginkgo.Describe("Granular Checks: Pods", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
+	ginkgo.Describe("Granular Checks: Pods", ginkgo.Ordered, func() {
 
 		checkPodToPodConnectivity := func(ctx context.Context, config *e2enetwork.NetworkingTestConfig, protocol string, port int) {
 			// breadth first poll to quickly estimate failure.

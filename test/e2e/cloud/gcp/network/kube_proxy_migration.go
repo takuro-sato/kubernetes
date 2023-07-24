@@ -55,7 +55,7 @@ var _ = SIGDescribe("kube-proxy migration [Feature:KubeProxyDaemonSetMigration]"
 		e2eskipper.SkipUnlessProviderIs("gce")
 	})
 
-	ginkgo.Describe("Upgrade kube-proxy from static pods to a DaemonSet", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
+	ginkgo.Describe("Upgrade kube-proxy from static pods to a DaemonSet", ginkgo.Ordered, func() {
 		ginkgo.It("should maintain a functioning cluster [Feature:KubeProxyDaemonSetUpgrade]", func(ctx context.Context) {
 			upgCtx, err := common.GetUpgradeContext(f.ClientSet.Discovery())
 			framework.ExpectNoError(err)
@@ -73,7 +73,7 @@ var _ = SIGDescribe("kube-proxy migration [Feature:KubeProxyDaemonSetMigration]"
 		})
 	})
 
-	ginkgo.Describe("Downgrade kube-proxy from a DaemonSet to static pods", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
+	ginkgo.Describe("Downgrade kube-proxy from a DaemonSet to static pods", ginkgo.Ordered, func() {
 		ginkgo.It("should maintain a functioning cluster [Feature:KubeProxyDaemonSetDowngrade]", func(ctx context.Context) {
 			upgCtx, err := common.GetUpgradeContext(f.ClientSet.Discovery())
 			framework.ExpectNoError(err)

@@ -122,7 +122,7 @@ var _ = utils.SIGDescribe("PersistentVolumes", func() {
 
 	// Testing configurations of a single a PV/PVC pair, multiple evenly paired PVs/PVCs,
 	// and multiple unevenly paired PV/PVCs
-	ginkgo.Describe("NFS", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
+	ginkgo.Describe("NFS", ginkgo.Ordered, func() {
 
 		var (
 			nfsServerPod *v1.Pod
@@ -324,7 +324,7 @@ var _ = utils.SIGDescribe("PersistentVolumes", func() {
 	// doesn't have the ntfs parameter, we can't change the status of the cluster
 	// to add a StorageClass that's compatible with windows which is also the
 	// default StorageClass
-	ginkgo.Describe("Default StorageClass [LinuxOnly]", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
+	ginkgo.Describe("Default StorageClass [LinuxOnly]", ginkgo.Ordered, func() {
 		ginkgo.Context("pods that use multiple volumes", func() {
 
 			ginkgo.AfterEach(func(ctx context.Context) {
