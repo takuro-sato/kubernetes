@@ -37,7 +37,7 @@ var (
 
 // SIGDescribe annotates the test with the SIG label.
 func SIGDescribe(text string, body func()) bool {
-	return ginkgo.Describe("[sig-scheduling] "+text, body)
+	return ginkgo.Describe("[sig-scheduling] "+text, ginkgo.Ordered, ginkgo.ContinueOnFailure, body)
 }
 
 // WaitForStableCluster waits until all existing pods are scheduled and returns their amount.
