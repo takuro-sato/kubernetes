@@ -29,6 +29,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"regexp"
 	"runtime/debug"
 	"strconv"
 	"strings"
@@ -792,10 +793,18 @@ func getMD5Hash(text string) string {
 	return hex.EncodeToString(hash)
 }
 
+func getFileLineNumbers(stackTrace string) string {
+	re := regexp.MustCompile(`\b(\w+\.go:\d+)\b`)
+	matches := re.FindAllString(stackTrace, -1)
+	return strings.Join(matches, ",")
+}
+
 func DummyUUID() types.UID {
 	stackTrace := string(debug.Stack())
+	// stack trace can be non deterministic
+	fileAndLines := getFileLineNumbers(stackTrace)
 	// Prevent resource name hits the limit
-	hash := getMD5Hash(stackTrace)
+	hash := getMD5Hash(fileAndLines)
 	// format of 02c84665-0791-4aee-be0c-c48adcecfe15
 	strUUID := fmt.Sprintf("%s-%s-%s-%s-%012d", hash[0:8], hash[8:12], hash[12:16], hash[16:20], idSuffix(hash))
 	return types.UID(strUUID)
