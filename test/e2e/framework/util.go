@@ -343,7 +343,7 @@ func CreateTestingNS(ctx context.Context, baseName string, c clientset.Interface
 	// We don't use ObjectMeta.GenerateName feature, as in case of API call
 	// failure we don't know whether the namespace was created and what is its
 	// name.
-	name := fmt.Sprintf("%v-%v", baseName, RandomSuffix())
+	name := fmt.Sprintf("%v-%v", baseName, DeterministicNsSuffix(baseName))
 
 	namespaceObj := &v1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
@@ -362,7 +362,7 @@ func CreateTestingNS(ctx context.Context, baseName string, c clientset.Interface
 			if apierrors.IsAlreadyExists(err) {
 				// regenerate on conflict
 				Logf("Namespace name %q was already taken, generate a new name and retry", namespaceObj.Name)
-				namespaceObj.Name = fmt.Sprintf("%v-%v", baseName, RandomSuffix())
+				namespaceObj.Name = fmt.Sprintf("%v-%v", baseName, DeterministicNsSuffix(baseName))
 			} else {
 				Logf("Unexpected error while creating namespace: %v", err)
 			}
@@ -799,6 +799,22 @@ func getFileLineNumbers(stackTrace string) string {
 	return strings.Join(matches, ",")
 }
 
+// func getFileLineNumbers(stackTrace string) string {
+// 	// Regular expression pattern to match file paths and line numbers
+// 	// re := regexp.MustCompile(`\b(\w+\.go:\d+)\b`)
+// 	// re := regexp.MustCompile(`\s*(.+\.go:\d+)`)
+// 	re := regexp.MustCompile(`(?m)^\s*(/.+\.go:\d+)`)
+
+// 	// Find all matches in the stack trace
+// 	matches := re.FindAllStringSubmatch(stackTrace, -1)
+// 	res := ""
+// 	for _, match := range matches {
+// 		res = res + match[1] + ","
+// 	}
+
+// 	return string(res)
+// }
+
 func DummyUUID() types.UID {
 	stackTrace := string(debug.Stack())
 	// stack trace can be non deterministic
@@ -807,5 +823,12 @@ func DummyUUID() types.UID {
 	hash := getMD5Hash(fileAndLines)
 	// format of 02c84665-0791-4aee-be0c-c48adcecfe15
 	strUUID := fmt.Sprintf("%s-%s-%s-%s-%012d", hash[0:8], hash[8:12], hash[12:16], hash[16:20], idSuffix(hash))
+	fmt.Printf("\n[MYLOG] fileAndLines:%s, strUUID:%s\n", fileAndLines, strUUID)
 	return types.UID(strUUID)
+}
+
+var nsSuffixCounter = NewCounter()
+
+func DeterministicNsSuffix(prefix string) string {
+	return strconv.Itoa(nsSuffixCounter.Increment(prefix))
 }
