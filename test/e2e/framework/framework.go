@@ -479,6 +479,9 @@ func (f *Framework) CreateNamespace(ctx context.Context, baseName string, labels
 
 	}
 
+	testName := ginkgo.CurrentSpecReport().FullText()
+	fmt.Printf("\nTEST_TO_NS::::%s::::%s\n", testName, ns.Name)
+
 	return ns, err
 }
 
