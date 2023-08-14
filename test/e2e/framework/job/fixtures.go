@@ -20,7 +20,6 @@ import (
 	batchv1 "k8s.io/api/batch/v1"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/rand"
 	"k8s.io/kubernetes/test/e2e/framework"
 )
 
@@ -120,7 +119,7 @@ func NewTestJobOnNode(behavior, name string, rPol v1.RestartPolicy, parallelism,
 // setup host path directory to pass information between pod restarts
 func setupHostPathDirectory(job *batchv1.Job) {
 	if len(job.Spec.Template.Spec.NodeName) > 0 {
-		randomDir := "/tmp/job-e2e/" + rand.String(10)
+		randomDir := "/tmp/job-e2e/" + framework.DummyUtilrandString(10)
 		hostPathType := v1.HostPathDirectoryOrCreate
 		job.Spec.Template.Spec.Volumes[0].VolumeSource = v1.VolumeSource{HostPath: &v1.HostPathVolumeSource{Path: randomDir, Type: &hostPathType}}
 		// Tests involving r/w operations on hostPath volume needs to run in

@@ -31,7 +31,6 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
-	utilrand "k8s.io/apimachinery/pkg/util/rand"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/tools/cache"
@@ -239,7 +238,7 @@ var _ = SIGDescribe("LimitRange", func() {
 
 		ns := f.Namespace.Name
 		lrClient := f.ClientSet.CoreV1().LimitRanges(ns)
-		lrName := "e2e-limitrange-" + utilrand.String(5)
+		lrName := "e2e-limitrange-" + framework.DummyUtilrandString(5)
 		e2eLabelSelector := "e2e-test=" + lrName
 		patchedLabelSelector := lrName + "=patched"
 

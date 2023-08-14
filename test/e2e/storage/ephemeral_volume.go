@@ -24,7 +24,6 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/rand"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2epod "k8s.io/kubernetes/test/e2e/framework/pod"
@@ -76,7 +75,7 @@ type ephemeralTestInfo struct {
 
 func testEphemeralVolumePod(f *framework.Framework, volumeType string, source *v1.VolumeSource) *v1.Pod {
 	var (
-		suffix = strings.ToLower(fmt.Sprintf("%s-%s", volumeType, rand.String(4)))
+		suffix = strings.ToLower(fmt.Sprintf("%s-%s", volumeType, framework.DummyUtilrandString(4)))
 	)
 	return &v1.Pod{
 		ObjectMeta: metav1.ObjectMeta{

@@ -27,7 +27,6 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
-	utilrand "k8s.io/apimachinery/pkg/util/rand"
 	"k8s.io/apimachinery/pkg/util/wait"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -85,7 +84,7 @@ var _ = SIGDescribe("ControllerRevision [Serial]", func() {
 	f.NamespacePodSecurityEnforceLevel = admissionapi.LevelBaseline
 
 	image := WebserverImage
-	dsName := "e2e-" + utilrand.String(5) + "-daemon-set"
+	dsName := "e2e-" + framework.DummyUtilrandString(5) + "-daemon-set"
 
 	var ns string
 	var c clientset.Interface

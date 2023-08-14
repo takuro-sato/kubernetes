@@ -31,7 +31,6 @@ import (
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/errors"
-	"k8s.io/apimachinery/pkg/util/rand"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/kubernetes/test/e2e/framework"
@@ -505,7 +504,7 @@ func generateSuffixForPodName(s string) string {
 	//   2. add lower case alphanumeric characters at the end ('-[a-z0-9]{4}' is added),
 	//   3. convert the entire strings to lower case.
 	re := regexp.MustCompile("[^A-Za-z0-9]")
-	return strings.ToLower(fmt.Sprintf("%s-%s", re.ReplaceAllString(s, "-"), rand.String(4)))
+	return strings.ToLower(fmt.Sprintf("%s-%s", re.ReplaceAllString(s, "-"), framework.DummyUtilrandString(4)))
 }
 
 // SubpathTestPod returns a pod spec for subpath tests

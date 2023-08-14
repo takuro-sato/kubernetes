@@ -31,7 +31,6 @@ import (
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
-	utilrand "k8s.io/apimachinery/pkg/util/rand"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apimachinery/pkg/util/wait"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -806,7 +805,7 @@ var _ = SIGDescribe("ServiceAccounts", func() {
 	*/
 	framework.ConformanceIt("should update a ServiceAccount", func(ctx context.Context) {
 		saClient := f.ClientSet.CoreV1().ServiceAccounts(f.Namespace.Name)
-		saName := "e2e-sa-" + utilrand.String(5)
+		saName := "e2e-sa-" + framework.DummyUtilrandString(5)
 
 		initialServiceAccount := &v1.ServiceAccount{
 			ObjectMeta: metav1.ObjectMeta{

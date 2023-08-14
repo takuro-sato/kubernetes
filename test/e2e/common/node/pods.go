@@ -39,7 +39,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	utilrand "k8s.io/apimachinery/pkg/util/rand"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/dynamic"
@@ -1083,7 +1082,7 @@ var _ = SIGDescribe("Pods", func() {
 	framework.ConformanceIt("should patch a pod status", func(ctx context.Context) {
 		ns := f.Namespace.Name
 		podClient := f.ClientSet.CoreV1().Pods(ns)
-		podName := "pod-" + utilrand.String(5)
+		podName := "pod-" + framework.DummyUtilrandString(5)
 		label := map[string]string{"e2e": podName}
 
 		ginkgo.By("Create a pod")

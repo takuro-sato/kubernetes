@@ -30,7 +30,6 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	utilrand "k8s.io/apimachinery/pkg/util/rand"
 	"k8s.io/apimachinery/pkg/util/wait"
 	clientscheme "k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/util/retry"
@@ -398,7 +397,7 @@ var _ = SIGDescribe("Namespaces [Serial]", func() {
 
 		fakeFinalizer := v1.FinalizerName("e2e.example.com/fakeFinalizer")
 		var updatedNamespace *v1.Namespace
-		nsName := "e2e-ns-" + utilrand.String(5)
+		nsName := "e2e-ns-" + framework.DummyUtilrandString(5)
 
 		ginkgo.By(fmt.Sprintf("Creating namespace %q", nsName))
 		testNamespace, err := f.CreateNamespace(ctx, nsName, nil)

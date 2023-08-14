@@ -29,7 +29,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
-	utilrand "k8s.io/apimachinery/pkg/util/rand"
 	"k8s.io/apimachinery/pkg/util/wait"
 	watch "k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/dynamic"
@@ -422,7 +421,7 @@ var _ = SIGDescribe("ReplicationController", func() {
 	*/
 	framework.ConformanceIt("should get and update a ReplicationController scale", func(ctx context.Context) {
 		rcClient := f.ClientSet.CoreV1().ReplicationControllers(ns)
-		rcName := "e2e-rc-" + utilrand.String(5)
+		rcName := "e2e-rc-" + framework.DummyUtilrandString(5)
 		initialRCReplicaCount := int32(1)
 		expectedRCReplicaCount := int32(2)
 

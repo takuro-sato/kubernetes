@@ -780,10 +780,16 @@ func (cm *Counter) Increment(name string) int {
 	return cm.counters[name]
 }
 
-var idCounter = NewCounter()
+var counterObj = NewCounter()
 
-func idSuffix(prefix string) int {
-	return idCounter.Increment(prefix)
+// It returns an integer incrementing starting from 1 for each `val` value.
+// example:
+// valueCounter("abc") -> 1
+// valueCounter("efg") -> 1
+// valueCounter("abc") -> 2
+// valueCounter("abc") -> 3
+func valueCounter(val string) int {
+	return counterObj.Increment(val)
 }
 
 func getMD5Hash(text string) string {
@@ -799,30 +805,15 @@ func getFileLineNumbers(stackTrace string) string {
 	return strings.Join(matches, ",")
 }
 
-// func getFileLineNumbers(stackTrace string) string {
-// 	// Regular expression pattern to match file paths and line numbers
-// 	// re := regexp.MustCompile(`\b(\w+\.go:\d+)\b`)
-// 	// re := regexp.MustCompile(`\s*(.+\.go:\d+)`)
-// 	re := regexp.MustCompile(`(?m)^\s*(/.+\.go:\d+)`)
-
-// 	// Find all matches in the stack trace
-// 	matches := re.FindAllStringSubmatch(stackTrace, -1)
-// 	res := ""
-// 	for _, match := range matches {
-// 		res = res + match[1] + ","
-// 	}
-
-// 	return string(res)
-// }
-
 func DummyUUID() types.UID {
 	stackTrace := string(debug.Stack())
 	// stack trace can be non deterministic
 	fileAndLines := getFileLineNumbers(stackTrace)
-	// Prevent resource name hits the limit
+	// Maybe there is a better way than to use MD5 as UUID, but we are doing it because it's easy.
 	hash := getMD5Hash(fileAndLines)
 	// format of 02c84665-0791-4aee-be0c-c48adcecfe15
-	strUUID := fmt.Sprintf("%s-%s-%s-%s-%012d", hash[0:8], hash[8:12], hash[12:16], hash[16:20], idSuffix(hash))
+	// valueCounter hanldes the case where a same stack trace calls this function multiple times (Like inside a for loop).
+	strUUID := fmt.Sprintf("%s-%s-%s-%s-%012d", hash[0:8], hash[8:12], hash[12:16], hash[16:20], valueCounter(hash))
 	fmt.Printf("\n[MYLOG] fileAndLines:%s, strUUID:%s\n", fileAndLines, strUUID)
 	return types.UID(strUUID)
 }
@@ -831,4 +822,28 @@ var nsSuffixCounter = NewCounter()
 
 func DeterministicNsSuffix(prefix string) string {
 	return strconv.Itoa(nsSuffixCounter.Increment(prefix))
+}
+
+// Represents an interger val in n digit.
+// n sould be large enough.
+func representIntInNDigit(val int, n int) string {
+	intStr := fmt.Sprintf("%d", val)
+	if len(intStr) > n {
+		intStr = intStr[:n]
+	}
+	padding := strings.Repeat("0", n-len(intStr))
+	return padding + intStr
+}
+
+// Dummy deterministic version of String() function in "k8s.io/apimachinery/pkg/util/rand".
+// It only returns strings with numbers for simplicity.
+// The number will be less diverse, but it should be fine for the purpose of making test deterministic.
+func DummyUtilrandString(n int) string {
+	stackTrace := string(debug.Stack())
+	// stack trace can be non deterministic
+	fileAndLines := getFileLineNumbers(stackTrace)
+	// Maybe there is a better way than to use MD5 as UUID, but it's what we do now.
+	hash := getMD5Hash(fileAndLines)
+
+	return representIntInNDigit(valueCounter(hash), n)
 }

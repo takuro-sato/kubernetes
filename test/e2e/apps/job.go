@@ -33,7 +33,6 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
-	utilrand "k8s.io/apimachinery/pkg/util/rand"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/apimachinery/pkg/watch"
@@ -711,7 +710,7 @@ var _ = SIGDescribe("Job", func() {
 		collection of jobs via a label selector.
 	*/
 	framework.ConformanceIt("should manage the lifecycle of a job", func(ctx context.Context) {
-		jobName := "e2e-" + utilrand.String(5)
+		jobName := "e2e-" + framework.DummyUtilrandString(5)
 		label := map[string]string{"e2e-job-label": jobName}
 		labelSelector := labels.SelectorFromSet(label).String()
 

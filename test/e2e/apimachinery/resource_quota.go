@@ -36,7 +36,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	utilrand "k8s.io/apimachinery/pkg/util/rand"
 	"k8s.io/apimachinery/pkg/util/wait"
 	watch "k8s.io/apimachinery/pkg/watch"
 	quota "k8s.io/apiserver/pkg/quota/v1"
@@ -947,7 +946,7 @@ var _ = SIGDescribe("ResourceQuota", func() {
 		client := f.ClientSet
 		ns := f.Namespace.Name
 
-		rqName := "e2e-quota-" + utilrand.String(5)
+		rqName := "e2e-quota-" + framework.DummyUtilrandString(5)
 		label := map[string]string{"e2e-rq-label": rqName}
 		labelSelector := labels.SelectorFromSet(label).String()
 
@@ -1013,7 +1012,7 @@ var _ = SIGDescribe("ResourceQuota", func() {
 	framework.ConformanceIt("should apply changes to a resourcequota status", func(ctx context.Context) {
 		ns := f.Namespace.Name
 		rqClient := f.ClientSet.CoreV1().ResourceQuotas(ns)
-		rqName := "e2e-rq-status-" + utilrand.String(5)
+		rqName := "e2e-rq-status-" + framework.DummyUtilrandString(5)
 		label := map[string]string{"e2e-rq-label": rqName}
 		labelSelector := labels.SelectorFromSet(label).String()
 
