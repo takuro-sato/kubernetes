@@ -24,7 +24,6 @@ import (
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	"k8s.io/kubernetes/test/e2e/storage/utils"
 	imageutils "k8s.io/kubernetes/test/utils/image"
@@ -51,7 +50,7 @@ var _ = utils.SIGDescribe("CSIInlineVolumes", func() {
 		// Driver that supports only Ephemeral
 		driver1 := &storagev1.CSIDriver{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "inline-driver-" + string(uuid.NewUUID()),
+				Name: "inline-driver-" + string(framework.DummyUUID()),
 				Labels: map[string]string{
 					"test": f.UniqueName,
 				},
@@ -66,7 +65,7 @@ var _ = utils.SIGDescribe("CSIInlineVolumes", func() {
 		// Driver that supports both Ephemeral and Persistent
 		driver2 := &storagev1.CSIDriver{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "inline-driver-" + string(uuid.NewUUID()),
+				Name: "inline-driver-" + string(framework.DummyUUID()),
 				Labels: map[string]string{
 					"test": f.UniqueName,
 				},

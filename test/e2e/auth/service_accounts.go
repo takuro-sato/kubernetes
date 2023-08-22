@@ -31,9 +31,7 @@ import (
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
-	utilrand "k8s.io/apimachinery/pkg/util/rand"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	watch "k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/util/retry"
@@ -82,7 +80,7 @@ var _ = SIGDescribe("ServiceAccounts", func() {
 		zero := int64(0)
 		pod, err := f.ClientSet.CoreV1().Pods(f.Namespace.Name).Create(ctx, &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "pod-service-account-" + string(uuid.NewUUID()),
+				Name: "pod-service-account-" + string(framework.DummyUUID()),
 			},
 			Spec: v1.PodSpec{
 				ServiceAccountName: sa.Name,
@@ -275,7 +273,7 @@ var _ = SIGDescribe("ServiceAccounts", func() {
 	framework.ConformanceIt("should mount projected service account token", func(ctx context.Context) {
 
 		var (
-			podName         = "test-pod-" + string(uuid.NewUUID())
+			podName         = "test-pod-" + string(framework.DummyUUID())
 			volumeName      = "test-volume"
 			volumeMountPath = "/test-volume"
 			tokenVolumePath = "/test-volume/token"
@@ -337,7 +335,7 @@ var _ = SIGDescribe("ServiceAccounts", func() {
 		e2eskipper.SkipIfNodeOSDistroIs("windows")
 
 		var (
-			podName         = "test-pod-" + string(uuid.NewUUID())
+			podName         = "test-pod-" + string(framework.DummyUUID())
 			volumeName      = "test-volume"
 			volumeMountPath = "/test-volume"
 			tokenVolumePath = "/test-volume/token"
@@ -807,7 +805,7 @@ var _ = SIGDescribe("ServiceAccounts", func() {
 	*/
 	framework.ConformanceIt("should update a ServiceAccount", func(ctx context.Context) {
 		saClient := f.ClientSet.CoreV1().ServiceAccounts(f.Namespace.Name)
-		saName := "e2e-sa-" + utilrand.String(5)
+		saName := "e2e-sa-" + framework.DummyUtilrandString(5)
 
 		initialServiceAccount := &v1.ServiceAccount{
 			ObjectMeta: metav1.ObjectMeta{

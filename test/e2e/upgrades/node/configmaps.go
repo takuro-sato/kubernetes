@@ -22,7 +22,6 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2eoutput "k8s.io/kubernetes/test/e2e/framework/pod/output"
 	"k8s.io/kubernetes/test/e2e/upgrades"
@@ -89,7 +88,7 @@ func (t *ConfigMapUpgradeTest) testPod(ctx context.Context, f *framework.Framewo
 
 	pod := &v1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "pod-configmap-" + string(uuid.NewUUID()),
+			Name:      "pod-configmap-" + string(framework.DummyUUID()),
 			Namespace: t.configMap.ObjectMeta.Namespace,
 		},
 		Spec: v1.PodSpec{

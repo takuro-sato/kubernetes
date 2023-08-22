@@ -29,7 +29,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/fields"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/kubernetes/test/e2e/framework"
@@ -148,7 +147,7 @@ var _ = SIGDescribe("[Feature:WindowsHostProcessContainers] [MinimumKubeletVersi
 	ginkgo.It("should support init containers", func(ctx context.Context) {
 		ginkgo.By("scheduling a pod with a container that verifies init container can configure the node")
 		podName := "host-process-init-pods"
-		filename := fmt.Sprintf("/testfile%s.txt", string(uuid.NewUUID()))
+		filename := fmt.Sprintf("/testfile%s.txt", string(framework.DummyUUID()))
 		pod := &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
 				Name: podName,

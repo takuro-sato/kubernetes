@@ -23,7 +23,6 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2epod "k8s.io/kubernetes/test/e2e/framework/pod"
 	e2epodoutput "k8s.io/kubernetes/test/e2e/framework/pod/output"
@@ -44,7 +43,7 @@ var _ = SIGDescribe("Projected secret", func() {
 	   Description: A Pod is created with a projected volume source 'secret' to store a secret with a specified key with default permission mode. Pod MUST be able to read the content of the key successfully and the mode MUST be -rw-r--r-- by default.
 	*/
 	framework.ConformanceIt("should be consumable from pods in volume [NodeConformance]", func(ctx context.Context) {
-		doProjectedSecretE2EWithoutMapping(ctx, f, nil /* default mode */, "projected-secret-test-"+string(uuid.NewUUID()), nil, nil)
+		doProjectedSecretE2EWithoutMapping(ctx, f, nil /* default mode */, "projected-secret-test-"+string(framework.DummyUUID()), nil, nil)
 	})
 
 	/*
@@ -55,7 +54,7 @@ var _ = SIGDescribe("Projected secret", func() {
 	*/
 	framework.ConformanceIt("should be consumable from pods in volume with defaultMode set [LinuxOnly] [NodeConformance]", func(ctx context.Context) {
 		defaultMode := int32(0400)
-		doProjectedSecretE2EWithoutMapping(ctx, f, &defaultMode, "projected-secret-test-"+string(uuid.NewUUID()), nil, nil)
+		doProjectedSecretE2EWithoutMapping(ctx, f, &defaultMode, "projected-secret-test-"+string(framework.DummyUUID()), nil, nil)
 	})
 
 	/*
@@ -67,7 +66,7 @@ var _ = SIGDescribe("Projected secret", func() {
 	framework.ConformanceIt("should be consumable from pods in volume as non-root with defaultMode and fsGroup set [LinuxOnly] [NodeConformance]", func(ctx context.Context) {
 		defaultMode := int32(0440) /* setting fsGroup sets mode to at least 440 */
 		fsGroup := int64(1001)
-		doProjectedSecretE2EWithoutMapping(ctx, f, &defaultMode, "projected-secret-test-"+string(uuid.NewUUID()), &fsGroup, &nonRootTestUserID)
+		doProjectedSecretE2EWithoutMapping(ctx, f, &defaultMode, "projected-secret-test-"+string(framework.DummyUUID()), &fsGroup, &nonRootTestUserID)
 	})
 
 	/*
@@ -94,7 +93,7 @@ var _ = SIGDescribe("Projected secret", func() {
 		var (
 			namespace2  *v1.Namespace
 			err         error
-			secret2Name = "projected-secret-test-" + string(uuid.NewUUID())
+			secret2Name = "projected-secret-test-" + string(framework.DummyUUID())
 		)
 
 		if namespace2, err = f.CreateNamespace(ctx, "secret-namespace", nil); err != nil {
@@ -121,7 +120,7 @@ var _ = SIGDescribe("Projected secret", func() {
 		// volumes in the same pod.  This test case exists to prevent
 		// regressions that break this use-case.
 		var (
-			name             = "projected-secret-test-" + string(uuid.NewUUID())
+			name             = "projected-secret-test-" + string(framework.DummyUUID())
 			volumeName       = "projected-secret-volume"
 			volumeMountPath  = "/etc/projected-secret-volume"
 			volumeName2      = "projected-secret-volume-2"
@@ -137,7 +136,7 @@ var _ = SIGDescribe("Projected secret", func() {
 
 		pod := &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "pod-projected-secrets-" + string(uuid.NewUUID()),
+				Name: "pod-projected-secrets-" + string(framework.DummyUUID()),
 			},
 			Spec: v1.PodSpec{
 				Volumes: []v1.Volume{
@@ -218,7 +217,7 @@ var _ = SIGDescribe("Projected secret", func() {
 		trueVal := true
 		volumeMountPath := "/etc/projected-secret-volumes"
 
-		deleteName := "s-test-opt-del-" + string(uuid.NewUUID())
+		deleteName := "s-test-opt-del-" + string(framework.DummyUUID())
 		deleteContainerName := "dels-volume-test"
 		deleteVolumeName := "deletes-volume"
 		deleteSecret := &v1.Secret{
@@ -231,7 +230,7 @@ var _ = SIGDescribe("Projected secret", func() {
 			},
 		}
 
-		updateName := "s-test-opt-upd-" + string(uuid.NewUUID())
+		updateName := "s-test-opt-upd-" + string(framework.DummyUUID())
 		updateContainerName := "upds-volume-test"
 		updateVolumeName := "updates-volume"
 		updateSecret := &v1.Secret{
@@ -244,7 +243,7 @@ var _ = SIGDescribe("Projected secret", func() {
 			},
 		}
 
-		createName := "s-test-opt-create-" + string(uuid.NewUUID())
+		createName := "s-test-opt-create-" + string(framework.DummyUUID())
 		createContainerName := "creates-volume-test"
 		createVolumeName := "creates-volume"
 		createSecret := &v1.Secret{
@@ -270,7 +269,7 @@ var _ = SIGDescribe("Projected secret", func() {
 
 		pod := &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "pod-projected-secrets-" + string(uuid.NewUUID()),
+				Name: "pod-projected-secrets-" + string(framework.DummyUUID()),
 			},
 			Spec: v1.PodSpec{
 				Volumes: []v1.Volume{
@@ -413,7 +412,7 @@ var _ = SIGDescribe("Projected secret", func() {
 	//Slow (~5 mins)
 	ginkgo.It("Should fail non-optional pod creation due to secret object does not exist [Slow]", func(ctx context.Context) {
 		volumeMountPath := "/etc/projected-secret-volumes"
-		podName := "pod-secrets-" + string(uuid.NewUUID())
+		podName := "pod-secrets-" + string(framework.DummyUUID())
 		pod := createNonOptionalSecretPod(ctx, f, volumeMountPath, podName)
 		getPod := e2epod.Get(f.ClientSet, pod)
 		gomega.Consistently(ctx, getPod).WithTimeout(f.Timeouts.PodStart).Should(e2epod.BeInPhase(v1.PodPending))
@@ -424,7 +423,7 @@ var _ = SIGDescribe("Projected secret", func() {
 	//Slow (~5 mins)
 	ginkgo.It("Should fail non-optional pod creation due to the key in the secret object does not exist [Slow]", func(ctx context.Context) {
 		volumeMountPath := "/etc/secret-volumes"
-		podName := "pod-secrets-" + string(uuid.NewUUID())
+		podName := "pod-secrets-" + string(framework.DummyUUID())
 		pod := createNonOptionalSecretPodWithSecret(ctx, f, volumeMountPath, podName)
 		getPod := e2epod.Get(f.ClientSet, pod)
 		gomega.Consistently(ctx, getPod).WithTimeout(f.Timeouts.PodStart).Should(e2epod.BeInPhase(v1.PodPending))
@@ -447,7 +446,7 @@ func doProjectedSecretE2EWithoutMapping(ctx context.Context, f *framework.Framew
 
 	pod := &v1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "pod-projected-secrets-" + string(uuid.NewUUID()),
+			Name:      "pod-projected-secrets-" + string(framework.DummyUUID()),
 			Namespace: f.Namespace.Name,
 		},
 		Spec: v1.PodSpec{
@@ -512,7 +511,7 @@ func doProjectedSecretE2EWithoutMapping(ctx context.Context, f *framework.Framew
 
 func doProjectedSecretE2EWithMapping(ctx context.Context, f *framework.Framework, mode *int32) {
 	var (
-		name            = "projected-secret-test-map-" + string(uuid.NewUUID())
+		name            = "projected-secret-test-map-" + string(framework.DummyUUID())
 		volumeName      = "projected-secret-volume"
 		volumeMountPath = "/etc/projected-secret-volume"
 		secret          = secretForTest(f.Namespace.Name, name)
@@ -526,7 +525,7 @@ func doProjectedSecretE2EWithMapping(ctx context.Context, f *framework.Framework
 
 	pod := &v1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: "pod-projected-secrets-" + string(uuid.NewUUID()),
+			Name: "pod-projected-secrets-" + string(framework.DummyUUID()),
 		},
 		Spec: v1.PodSpec{
 			Volumes: []v1.Volume{

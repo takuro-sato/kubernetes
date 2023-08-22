@@ -29,7 +29,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/kubernetes/test/e2e/framework"
@@ -59,7 +58,7 @@ func shredFile(filePath string) {
 // and puts it in a secret for the GCE PD CSI Driver to consume
 func createGCESecrets(client clientset.Interface, ns string) {
 	saEnv := "E2E_GOOGLE_APPLICATION_CREDENTIALS"
-	saFile := fmt.Sprintf("/tmp/%s/cloud-sa.json", string(uuid.NewUUID()))
+	saFile := fmt.Sprintf("/tmp/%s/cloud-sa.json", string(framework.DummyUUID()))
 
 	os.MkdirAll(path.Dir(saFile), 0750)
 	defer os.Remove(path.Dir(saFile))

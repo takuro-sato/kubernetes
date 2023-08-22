@@ -37,8 +37,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime/schema"
-	"k8s.io/apimachinery/pkg/util/rand"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/kubernetes/pkg/controller/replicaset"
 	"k8s.io/kubernetes/test/e2e/framework"
@@ -181,7 +179,7 @@ var _ = SIGDescribe("ReplicaSet", func() {
 // A basic test to check the deployment of an image using a ReplicaSet. The
 // image serves its hostname which is checked for each replica.
 func testReplicaSetServeImageOrFail(ctx context.Context, f *framework.Framework, test string, image string) {
-	name := "my-hostname-" + test + "-" + string(uuid.NewUUID())
+	name := "my-hostname-" + test + "-" + string(framework.DummyUUID())
 	replicas := int32(1)
 
 	// Create a ReplicaSet for a service that serves its hostname.
@@ -560,7 +558,7 @@ func listRSDeleteCollection(ctx context.Context, f *framework.Framework) {
 	one := int64(1)
 	rsName := "test-rs"
 	replicas := int32(3)
-	e2eValue := rand.String(5)
+	e2eValue := framework.DummyUtilrandString(5)
 
 	// Define ReplicaSet Labels
 	rsPodLabels := map[string]string{

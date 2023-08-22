@@ -26,7 +26,6 @@ import (
 	"github.com/onsi/gomega"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2enode "k8s.io/kubernetes/test/e2e/framework/node"
@@ -335,12 +334,12 @@ func testSetupVolumePlacement(ctx context.Context, client clientset.Interface, n
 	}
 	node1Name = nodes.Items[0].Name
 	node2Name = nodes.Items[1].Name
-	node1LabelValue := "vsphere_e2e_" + string(uuid.NewUUID())
+	node1LabelValue := "vsphere_e2e_" + string(framework.DummyUUID())
 	node1KeyValueLabel = make(map[string]string)
 	node1KeyValueLabel[NodeLabelKey] = node1LabelValue
 	e2enode.AddOrUpdateLabelOnNode(client, node1Name, NodeLabelKey, node1LabelValue)
 
-	node2LabelValue := "vsphere_e2e_" + string(uuid.NewUUID())
+	node2LabelValue := "vsphere_e2e_" + string(framework.DummyUUID())
 	node2KeyValueLabel = make(map[string]string)
 	node2KeyValueLabel[NodeLabelKey] = node2LabelValue
 	e2enode.AddOrUpdateLabelOnNode(client, node2Name, NodeLabelKey, node2LabelValue)

@@ -30,7 +30,6 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apimachinery/pkg/util/strategicpatch"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	utilversion "k8s.io/apimachinery/pkg/util/version"
 	clientset "k8s.io/client-go/kubernetes"
 	podutil "k8s.io/kubernetes/pkg/api/v1/pod"
@@ -283,7 +282,7 @@ var _ = SIGDescribe("SchedulerPredicates [Serial]", func() {
 
 			// Create pod which requires 70% of the available beard-seconds.
 			fillerPod := createPausePod(ctx, f, pausePodConfig{
-				Name: "filler-pod-" + string(uuid.NewUUID()),
+				Name: "filler-pod-" + string(framework.DummyUUID()),
 				Resources: &v1.ResourceRequirements{
 					Requests: v1.ResourceList{beardsecond: resource.MustParse("700")},
 					Limits:   v1.ResourceList{beardsecond: resource.MustParse("700")},
@@ -298,7 +297,7 @@ var _ = SIGDescribe("SchedulerPredicates [Serial]", func() {
 			// which defines a pod overhead that requires an additional 25%.
 			// This pod should remain pending as at least 70% of beard-second in
 			// the node are already consumed.
-			podName := "additional-pod" + string(uuid.NewUUID())
+			podName := "additional-pod" + string(framework.DummyUUID())
 			conf := pausePodConfig{
 				RuntimeClassHandler: &handler,
 				Name:                podName,
@@ -381,7 +380,7 @@ var _ = SIGDescribe("SchedulerPredicates [Serial]", func() {
 			requestedCPU := cpu * 7 / 10
 			framework.Logf("Creating a pod which consumes cpu=%vm on Node %v", requestedCPU, nodeName)
 			fillerPods = append(fillerPods, createPausePod(ctx, f, pausePodConfig{
-				Name: "filler-pod-" + string(uuid.NewUUID()),
+				Name: "filler-pod-" + string(framework.DummyUUID()),
 				Resources: &v1.ResourceRequirements{
 					Limits: v1.ResourceList{
 						v1.ResourceCPU: *resource.NewMilliQuantity(requestedCPU, "DecimalSI"),
@@ -468,7 +467,7 @@ var _ = SIGDescribe("SchedulerPredicates [Serial]", func() {
 		nodeName := GetNodeThatCanRunPod(ctx, f)
 
 		ginkgo.By("Trying to apply a random label on the found node.")
-		k := fmt.Sprintf("kubernetes.io/e2e-%s", string(uuid.NewUUID()))
+		k := fmt.Sprintf("kubernetes.io/e2e-%s", string(framework.DummyUUID()))
 		v := "42"
 		e2enode.AddOrUpdateLabelOnNode(cs, nodeName, k, v)
 		e2enode.ExpectNodeHasLabel(ctx, cs, nodeName, k, v)
@@ -541,7 +540,7 @@ var _ = SIGDescribe("SchedulerPredicates [Serial]", func() {
 		nodeName := GetNodeThatCanRunPod(ctx, f)
 
 		ginkgo.By("Trying to apply a random label on the found node.")
-		k := fmt.Sprintf("kubernetes.io/e2e-%s", string(uuid.NewUUID()))
+		k := fmt.Sprintf("kubernetes.io/e2e-%s", string(framework.DummyUUID()))
 		v := "42"
 		e2enode.AddOrUpdateLabelOnNode(cs, nodeName, k, v)
 		e2enode.ExpectNodeHasLabel(ctx, cs, nodeName, k, v)
@@ -590,7 +589,7 @@ var _ = SIGDescribe("SchedulerPredicates [Serial]", func() {
 
 		ginkgo.By("Trying to apply a random taint on the found node.")
 		testTaint := v1.Taint{
-			Key:    fmt.Sprintf("kubernetes.io/e2e-taint-key-%s", string(uuid.NewUUID())),
+			Key:    fmt.Sprintf("kubernetes.io/e2e-taint-key-%s", string(framework.DummyUUID())),
 			Value:  "testing-taint-value",
 			Effect: v1.TaintEffectNoSchedule,
 		}
@@ -599,7 +598,7 @@ var _ = SIGDescribe("SchedulerPredicates [Serial]", func() {
 		ginkgo.DeferCleanup(e2enode.RemoveTaintOffNode, cs, nodeName, testTaint)
 
 		ginkgo.By("Trying to apply a random label on the found node.")
-		labelKey := fmt.Sprintf("kubernetes.io/e2e-label-key-%s", string(uuid.NewUUID()))
+		labelKey := fmt.Sprintf("kubernetes.io/e2e-label-key-%s", string(framework.DummyUUID()))
 		labelValue := "testing-label-value"
 		e2enode.AddOrUpdateLabelOnNode(cs, nodeName, labelKey, labelValue)
 		e2enode.ExpectNodeHasLabel(ctx, cs, nodeName, labelKey, labelValue)
@@ -633,7 +632,7 @@ var _ = SIGDescribe("SchedulerPredicates [Serial]", func() {
 
 		ginkgo.By("Trying to apply a random taint on the found node.")
 		testTaint := v1.Taint{
-			Key:    fmt.Sprintf("kubernetes.io/e2e-taint-key-%s", string(uuid.NewUUID())),
+			Key:    fmt.Sprintf("kubernetes.io/e2e-taint-key-%s", string(framework.DummyUUID())),
 			Value:  "testing-taint-value",
 			Effect: v1.TaintEffectNoSchedule,
 		}
@@ -642,7 +641,7 @@ var _ = SIGDescribe("SchedulerPredicates [Serial]", func() {
 		ginkgo.DeferCleanup(e2enode.RemoveTaintOffNode, cs, nodeName, testTaint)
 
 		ginkgo.By("Trying to apply a random label on the found node.")
-		labelKey := fmt.Sprintf("kubernetes.io/e2e-label-key-%s", string(uuid.NewUUID()))
+		labelKey := fmt.Sprintf("kubernetes.io/e2e-label-key-%s", string(framework.DummyUUID()))
 		labelValue := "testing-label-value"
 		e2enode.AddOrUpdateLabelOnNode(cs, nodeName, labelKey, labelValue)
 		e2enode.ExpectNodeHasLabel(ctx, cs, nodeName, labelKey, labelValue)
@@ -674,7 +673,7 @@ var _ = SIGDescribe("SchedulerPredicates [Serial]", func() {
 
 		// use nodeSelector to make sure the testing pods get assigned on the same node to explicitly verify there exists conflict or not
 		ginkgo.By("Trying to apply a random label on the found node.")
-		k := fmt.Sprintf("kubernetes.io/e2e-%s", string(uuid.NewUUID()))
+		k := fmt.Sprintf("kubernetes.io/e2e-%s", string(framework.DummyUUID()))
 		v := "90"
 
 		nodeSelector := make(map[string]string)
@@ -707,7 +706,7 @@ var _ = SIGDescribe("SchedulerPredicates [Serial]", func() {
 		hostIP := getNodeHostIP(ctx, f, nodeName)
 		// use nodeSelector to make sure the testing pods get assigned on the same node to explicitly verify there exists conflict or not
 		ginkgo.By("Trying to apply a random label on the found node.")
-		k := fmt.Sprintf("kubernetes.io/e2e-%s", string(uuid.NewUUID()))
+		k := fmt.Sprintf("kubernetes.io/e2e-%s", string(framework.DummyUUID()))
 		v := "95"
 
 		nodeSelector := make(map[string]string)

@@ -30,7 +30,6 @@ import (
 	"k8s.io/apimachinery/pkg/fields"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/kubernetes/test/e2e/framework"
@@ -197,7 +196,7 @@ func (t *dnsTestCommon) restoreDNSConfigMap(ctx context.Context, configMapData m
 func (t *dnsTestCommon) createUtilPodLabel(ctx context.Context, baseName string) {
 	// Actual port # doesn't matter, just needs to exist.
 	const servicePort = 10101
-	podName := fmt.Sprintf("%s-%s", baseName, string(uuid.NewUUID()))
+	podName := fmt.Sprintf("%s-%s", baseName, string(framework.DummyUUID()))
 	ports := []v1.ContainerPort{{ContainerPort: servicePort, Protocol: v1.ProtocolTCP}}
 	t.utilPod = e2epod.NewAgnhostPod(t.f.Namespace.Name, podName, nil, nil, ports)
 
@@ -258,7 +257,7 @@ func (t *dnsTestCommon) deleteCoreDNSPods(ctx context.Context) {
 }
 
 func generateCoreDNSServerPod(corednsConfig *v1.ConfigMap) *v1.Pod {
-	podName := fmt.Sprintf("e2e-configmap-dns-server-%s", string(uuid.NewUUID()))
+	podName := fmt.Sprintf("e2e-configmap-dns-server-%s", string(framework.DummyUUID()))
 	volumes := []v1.Volume{
 		{
 			Name: "coredns-config",
@@ -353,7 +352,7 @@ func (t *dnsTestCommon) deleteDNSServerPod(ctx context.Context) {
 }
 
 func createDNSPod(namespace, wheezyProbeCmd, jessieProbeCmd, podHostName, serviceName string) *v1.Pod {
-	podName := "dns-test-" + string(uuid.NewUUID())
+	podName := "dns-test-" + string(framework.DummyUUID())
 	volumes := []v1.Volume{
 		{
 			Name: "results",

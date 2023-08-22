@@ -27,7 +27,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/kubernetes/test/e2e/framework"
@@ -226,7 +225,7 @@ func newDensityTestPods(numPods int, volume bool, imageName, podType string) []*
 
 	for i := 0; i < numPods; i++ {
 
-		podName := "test-" + string(uuid.NewUUID())
+		podName := "test-" + string(framework.DummyUUID())
 		pod := v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
 				Name: podName,

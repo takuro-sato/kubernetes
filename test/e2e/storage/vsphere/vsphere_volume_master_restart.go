@@ -28,7 +28,6 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/kubernetes/pkg/cluster/ports"
 	"k8s.io/kubernetes/test/e2e/framework"
@@ -132,7 +131,7 @@ var _ = utils.SIGDescribe("Volume Attach Verify [Feature:vsphere][Serial][Disrup
 		for i := 0; i < numNodes; i++ {
 			nodeName := nodes.Items[i].Name
 			nodeNameList = append(nodeNameList, nodeName)
-			nodeLabelValue := "vsphere_e2e_" + string(uuid.NewUUID())
+			nodeLabelValue := "vsphere_e2e_" + string(framework.DummyUUID())
 			nodeKeyValueLabel := make(map[string]string)
 			nodeKeyValueLabel[labelKey] = nodeLabelValue
 			nodeKeyValueLabelList = append(nodeKeyValueLabelList, nodeKeyValueLabel)

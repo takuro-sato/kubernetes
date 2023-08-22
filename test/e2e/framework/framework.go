@@ -269,6 +269,7 @@ func (f *Framework) BeforeEach(ctx context.Context) {
 		f.UniqueName = f.Namespace.GetName()
 	} else {
 		// not guaranteed to be unique, but very likely
+		// This is not used, but needs to be check again.
 		f.UniqueName = fmt.Sprintf("%s-%08x", f.BaseName, rand.Int31())
 	}
 
@@ -477,6 +478,9 @@ func (f *Framework) CreateNamespace(ctx context.Context, baseName string, labels
 		}
 
 	}
+
+	testName := ginkgo.CurrentSpecReport().FullText()
+	fmt.Printf("\nTEST_TO_NS::::%s::::%s\n", testName, ns.Name)
 
 	return ns, err
 }

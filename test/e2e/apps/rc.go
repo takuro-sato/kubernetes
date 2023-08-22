@@ -29,8 +29,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
-	utilrand "k8s.io/apimachinery/pkg/util/rand"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	watch "k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/dynamic"
@@ -423,7 +421,7 @@ var _ = SIGDescribe("ReplicationController", func() {
 	*/
 	framework.ConformanceIt("should get and update a ReplicationController scale", func(ctx context.Context) {
 		rcClient := f.ClientSet.CoreV1().ReplicationControllers(ns)
-		rcName := "e2e-rc-" + utilrand.String(5)
+		rcName := "e2e-rc-" + framework.DummyUtilrandString(5)
 		initialRCReplicaCount := int32(1)
 		expectedRCReplicaCount := int32(2)
 
@@ -483,7 +481,7 @@ func newRC(rsName string, replicas int32, rcPodLabels map[string]string, imageNa
 // the deployment of an image using a replication controller.
 // The image serves its hostname which is checked for each replica.
 func TestReplicationControllerServeImageOrFail(ctx context.Context, f *framework.Framework, test string, image string) {
-	name := "my-hostname-" + test + "-" + string(uuid.NewUUID())
+	name := "my-hostname-" + test + "-" + string(framework.DummyUUID())
 	replicas := int32(1)
 
 	// Create a replication controller for a service

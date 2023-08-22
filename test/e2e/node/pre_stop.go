@@ -25,7 +25,6 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/kubernetes/pkg/cluster/ports"
@@ -173,7 +172,7 @@ var _ = SIGDescribe("PreStop", func() {
 	ginkgo.It("graceful pod terminated should wait until preStop hook completes the process", func(ctx context.Context) {
 		gracefulTerminationPeriodSeconds := int64(30)
 		ginkgo.By("creating the pod")
-		name := "pod-prestop-hook-" + string(uuid.NewUUID())
+		name := "pod-prestop-hook-" + string(framework.DummyUUID())
 		pod := getPodWithpreStopLifeCycle(name)
 
 		ginkgo.By("submitting the pod to kubernetes")

@@ -23,7 +23,6 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2epod "k8s.io/kubernetes/test/e2e/framework/pod"
 	e2epodoutput "k8s.io/kubernetes/test/e2e/framework/pod/output"
@@ -125,7 +124,7 @@ var _ = SIGDescribe("Projected configMap", func() {
 		podLogTimeout := e2epod.GetPodSecretUpdateTimeout(ctx, f.ClientSet)
 		containerTimeoutArg := fmt.Sprintf("--retry_time=%v", int(podLogTimeout.Seconds()))
 
-		name := "projected-configmap-test-upd-" + string(uuid.NewUUID())
+		name := "projected-configmap-test-upd-" + string(framework.DummyUUID())
 		volumeName := "projected-configmap-volume"
 		volumeMountPath := "/etc/projected-configmap-volume"
 		configMap := &v1.ConfigMap{
@@ -177,7 +176,7 @@ var _ = SIGDescribe("Projected configMap", func() {
 		trueVal := true
 		volumeMountPath := "/etc/projected-configmap-volumes"
 
-		deleteName := "cm-test-opt-del-" + string(uuid.NewUUID())
+		deleteName := "cm-test-opt-del-" + string(framework.DummyUUID())
 		deleteContainerName := "delcm-volume-test"
 		deleteVolumeName := "deletecm-volume"
 		deleteConfigMap := &v1.ConfigMap{
@@ -190,7 +189,7 @@ var _ = SIGDescribe("Projected configMap", func() {
 			},
 		}
 
-		updateName := "cm-test-opt-upd-" + string(uuid.NewUUID())
+		updateName := "cm-test-opt-upd-" + string(framework.DummyUUID())
 		updateContainerName := "updcm-volume-test"
 		updateVolumeName := "updatecm-volume"
 		updateConfigMap := &v1.ConfigMap{
@@ -203,7 +202,7 @@ var _ = SIGDescribe("Projected configMap", func() {
 			},
 		}
 
-		createName := "cm-test-opt-create-" + string(uuid.NewUUID())
+		createName := "cm-test-opt-create-" + string(framework.DummyUUID())
 		createContainerName := "createcm-volume-test"
 		createVolumeName := "createcm-volume"
 		createConfigMap := &v1.ConfigMap{
@@ -229,7 +228,7 @@ var _ = SIGDescribe("Projected configMap", func() {
 
 		pod := &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "pod-projected-configmaps-" + string(uuid.NewUUID()),
+				Name: "pod-projected-configmaps-" + string(framework.DummyUUID()),
 			},
 			Spec: v1.PodSpec{
 				Volumes: []v1.Volume{
@@ -374,7 +373,7 @@ var _ = SIGDescribe("Projected configMap", func() {
 	*/
 	framework.ConformanceIt("should be consumable in multiple volumes in the same pod [NodeConformance]", func(ctx context.Context) {
 		var (
-			name             = "projected-configmap-test-volume-" + string(uuid.NewUUID())
+			name             = "projected-configmap-test-volume-" + string(framework.DummyUUID())
 			volumeName       = "projected-configmap-volume"
 			volumeMountPath  = "/etc/projected-configmap-volume"
 			volumeName2      = "projected-configmap-volume-2"
@@ -390,7 +389,7 @@ var _ = SIGDescribe("Projected configMap", func() {
 
 		pod := &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "pod-projected-configmaps-" + string(uuid.NewUUID()),
+				Name: "pod-projected-configmaps-" + string(framework.DummyUUID()),
 			},
 			Spec: v1.PodSpec{
 				Volumes: []v1.Volume{
@@ -482,7 +481,7 @@ func doProjectedConfigMapE2EWithoutMappings(ctx context.Context, f *framework.Fr
 	groupID := int64(fsGroup)
 
 	var (
-		name            = "projected-configmap-test-volume-" + string(uuid.NewUUID())
+		name            = "projected-configmap-test-volume-" + string(framework.DummyUUID())
 		volumeName      = "projected-configmap-volume"
 		volumeMountPath = "/etc/projected-configmap-volume"
 		configMap       = newConfigMap(f, name)
@@ -522,7 +521,7 @@ func doProjectedConfigMapE2EWithMappings(ctx context.Context, f *framework.Frame
 	groupID := int64(fsGroup)
 
 	var (
-		name            = "projected-configmap-test-volume-map-" + string(uuid.NewUUID())
+		name            = "projected-configmap-test-volume-map-" + string(framework.DummyUUID())
 		volumeName      = "projected-configmap-volume"
 		volumeMountPath = "/etc/projected-configmap-volume"
 		configMap       = newConfigMap(f, name)
@@ -588,7 +587,7 @@ func createProjectedConfigMapMounttestPod(namespace, volumeName, referenceName, 
 			},
 		},
 	}
-	podName := "pod-projected-configmaps-" + string(uuid.NewUUID())
+	podName := "pod-projected-configmaps-" + string(framework.DummyUUID())
 	mounttestArgs = append([]string{"mounttest"}, mounttestArgs...)
 	pod := e2epod.NewAgnhostPod(namespace, podName, volumes, createMounts(volumeName, mountPath, true), nil, mounttestArgs...)
 	pod.Spec.RestartPolicy = v1.RestartPolicyNever

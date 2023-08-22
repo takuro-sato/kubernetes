@@ -33,7 +33,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/fields"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	podutil "k8s.io/kubernetes/pkg/api/v1/pod"
 	"k8s.io/kubernetes/pkg/kubelet/events"
 	"k8s.io/kubernetes/test/e2e/framework"
@@ -460,7 +459,7 @@ var _ = SIGDescribe("Probing container", func() {
 		Description: A pod with a long terminationGracePeriod is created with a shorter livenessProbe-level terminationGracePeriodSeconds. We confirm the shorter termination period is used.
 	*/
 	ginkgo.It("should override timeoutGracePeriodSeconds when LivenessProbe field is set [Feature:ProbeTerminationGracePeriod]", func(ctx context.Context) {
-		pod := e2epod.NewAgnhostPod(f.Namespace.Name, "liveness-override-"+string(uuid.NewUUID()), nil, nil, nil, "/bin/sh", "-c", "sleep 1000")
+		pod := e2epod.NewAgnhostPod(f.Namespace.Name, "liveness-override-"+string(framework.DummyUUID()), nil, nil, nil, "/bin/sh", "-c", "sleep 1000")
 		longGracePeriod := int64(500)
 		pod.Spec.TerminationGracePeriodSeconds = &longGracePeriod
 
@@ -488,7 +487,7 @@ var _ = SIGDescribe("Probing container", func() {
 		Description: A pod with a long terminationGracePeriod is created with a shorter startupProbe-level terminationGracePeriodSeconds. We confirm the shorter termination period is used.
 	*/
 	ginkgo.It("should override timeoutGracePeriodSeconds when StartupProbe field is set [Feature:ProbeTerminationGracePeriod]", func(ctx context.Context) {
-		pod := e2epod.NewAgnhostPod(f.Namespace.Name, "startup-override-"+string(uuid.NewUUID()), nil, nil, nil, "/bin/sh", "-c", "sleep 1000")
+		pod := e2epod.NewAgnhostPod(f.Namespace.Name, "startup-override-"+string(framework.DummyUUID()), nil, nil, nil, "/bin/sh", "-c", "sleep 1000")
 		longGracePeriod := int64(500)
 		pod.Spec.TerminationGracePeriodSeconds = &longGracePeriod
 
@@ -559,7 +558,7 @@ var _ = SIGDescribe("Probing container", func() {
 	})
 
 	ginkgo.It("should mark readiness on pods to false while pod is in progress of terminating when a pod has a readiness probe", func(ctx context.Context) {
-		podName := "probe-test-" + string(uuid.NewUUID())
+		podName := "probe-test-" + string(framework.DummyUUID())
 		podClient := e2epod.NewPodClient(f)
 		terminationGracePeriod := int64(30)
 		script := `
@@ -625,7 +624,7 @@ done
 	})
 
 	ginkgo.It("should mark readiness on pods to false and disable liveness probes while pod is in progress of terminating", func(ctx context.Context) {
-		podName := "probe-test-" + string(uuid.NewUUID())
+		podName := "probe-test-" + string(framework.DummyUUID())
 		podClient := e2epod.NewPodClient(f)
 		terminationGracePeriod := int64(30)
 		script := `
@@ -823,7 +822,7 @@ func getRestartCount(p *v1.Pod) int {
 
 func testWebServerPodSpec(readinessProbe, livenessProbe *v1.Probe, containerName string, port int) *v1.Pod {
 	return &v1.Pod{
-		ObjectMeta: metav1.ObjectMeta{Name: "test-webserver-" + string(uuid.NewUUID())},
+		ObjectMeta: metav1.ObjectMeta{Name: "test-webserver-" + string(framework.DummyUUID())},
 		Spec: v1.PodSpec{
 			Containers: []v1.Container{
 				{
@@ -842,7 +841,7 @@ func testWebServerPodSpec(readinessProbe, livenessProbe *v1.Probe, containerName
 func busyBoxPodSpec(readinessProbe, livenessProbe *v1.Probe, cmd []string) *v1.Pod {
 	return &v1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:   "busybox-" + string(uuid.NewUUID()),
+			Name:   "busybox-" + string(framework.DummyUUID()),
 			Labels: map[string]string{"test": "liveness"},
 		},
 		Spec: v1.PodSpec{
@@ -860,7 +859,7 @@ func busyBoxPodSpec(readinessProbe, livenessProbe *v1.Probe, cmd []string) *v1.P
 }
 
 func livenessPodSpec(namespace string, readinessProbe, livenessProbe *v1.Probe) *v1.Pod {
-	pod := e2epod.NewAgnhostPod(namespace, "liveness-"+string(uuid.NewUUID()), nil, nil, nil, "liveness")
+	pod := e2epod.NewAgnhostPod(namespace, "liveness-"+string(framework.DummyUUID()), nil, nil, nil, "liveness")
 	pod.ObjectMeta.Labels = map[string]string{"test": "liveness"}
 	pod.Spec.Containers[0].LivenessProbe = livenessProbe
 	pod.Spec.Containers[0].ReadinessProbe = readinessProbe
@@ -870,7 +869,7 @@ func livenessPodSpec(namespace string, readinessProbe, livenessProbe *v1.Probe) 
 func startupPodSpec(startupProbe, readinessProbe, livenessProbe *v1.Probe, cmd []string) *v1.Pod {
 	return &v1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:   "startup-" + string(uuid.NewUUID()),
+			Name:   "startup-" + string(framework.DummyUUID()),
 			Labels: map[string]string{"test": "startup"},
 		},
 		Spec: v1.PodSpec{
@@ -1036,7 +1035,7 @@ func runReadinessFailTest(ctx context.Context, f *framework.Framework, pod *v1.P
 
 func gRPCServerPodSpec(readinessProbe, livenessProbe *v1.Probe, containerName string) *v1.Pod {
 	return &v1.Pod{
-		ObjectMeta: metav1.ObjectMeta{Name: "test-grpc-" + string(uuid.NewUUID())},
+		ObjectMeta: metav1.ObjectMeta{Name: "test-grpc-" + string(framework.DummyUUID())},
 		Spec: v1.PodSpec{
 			Containers: []v1.Container{
 				{

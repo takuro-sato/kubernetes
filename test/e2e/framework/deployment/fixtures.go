@@ -25,7 +25,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	apiequality "k8s.io/apimachinery/pkg/api/equality"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2epod "k8s.io/kubernetes/test/e2e/framework/pod"
@@ -180,7 +179,7 @@ func testDeployment(replicas int32, podLabels map[string]string, nodeSelector ma
 		command = "trap exit TERM; while true; do sleep 1; done"
 	}
 	zero := int64(0)
-	deploymentName := "deployment-" + string(uuid.NewUUID())
+	deploymentName := "deployment-" + string(framework.DummyUUID())
 	deploymentSpec := &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      deploymentName,

@@ -25,7 +25,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/pkg/kubelet/sysctl"
 
 	"k8s.io/kubernetes/test/e2e/framework"
@@ -97,7 +96,7 @@ func (t *SysctlUpgradeTest) verifySafeSysctlWork(ctx context.Context, f *framewo
 
 func (t *SysctlUpgradeTest) verifyUnsafeSysctlsAreRejected(ctx context.Context, f *framework.Framework) *v1.Pod {
 	ginkgo.By("Creating a pod with unsafe sysctls")
-	invalidPod := sysctlTestPod("valid-sysctls-"+string(uuid.NewUUID()), map[string]string{
+	invalidPod := sysctlTestPod("valid-sysctls-"+string(framework.DummyUUID()), map[string]string{
 		"fs.mount-max": "1000000",
 	})
 	invalidPod = e2epod.NewPodClient(f).Create(ctx, invalidPod)

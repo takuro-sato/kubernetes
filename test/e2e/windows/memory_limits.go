@@ -30,7 +30,6 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2eskipper "k8s.io/kubernetes/test/e2e/framework/skipper"
 	imageutils "k8s.io/kubernetes/test/utils/image"
@@ -110,7 +109,7 @@ func overrideAllocatableMemoryTest(ctx context.Context, f *framework.Framework, 
 
 	for _, node := range nodeList.Items {
 		status := node.Status
-		podName := "mem-test-" + string(uuid.NewUUID())
+		podName := "mem-test-" + string(framework.DummyUUID())
 		pod := &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
 				Name: podName,

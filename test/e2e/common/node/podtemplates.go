@@ -25,8 +25,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
-	utilrand "k8s.io/apimachinery/pkg/util/rand"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/util/retry"
 	"k8s.io/kubernetes/test/e2e/framework"
@@ -52,7 +50,7 @@ var _ = SIGDescribe("PodTemplates", func() {
 	*/
 	framework.ConformanceIt("should run the lifecycle of PodTemplates", func(ctx context.Context) {
 		testNamespaceName := f.Namespace.Name
-		podTemplateName := "nginx-pod-template-" + string(uuid.NewUUID())
+		podTemplateName := "nginx-pod-template-" + string(framework.DummyUUID())
 
 		// get a list of PodTemplates (in all namespaces to hit endpoint)
 		podTemplateList, err := f.ClientSet.CoreV1().PodTemplates("").List(ctx, metav1.ListOptions{
@@ -175,7 +173,7 @@ var _ = SIGDescribe("PodTemplates", func() {
 	*/
 	framework.ConformanceIt("should replace a pod template", func(ctx context.Context) {
 		ptClient := f.ClientSet.CoreV1().PodTemplates(f.Namespace.Name)
-		ptName := "podtemplate-" + utilrand.String(5)
+		ptName := "podtemplate-" + framework.DummyUtilrandString(5)
 
 		ginkgo.By("Create a pod template")
 		ptResource, err := ptClient.Create(ctx, &v1.PodTemplate{

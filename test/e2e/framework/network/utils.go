@@ -35,7 +35,6 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 	utilnet "k8s.io/apimachinery/pkg/util/net"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	clientset "k8s.io/client-go/kubernetes"
 	coreclientset "k8s.io/client-go/kubernetes/typed/core/v1"
@@ -151,7 +150,7 @@ func NewCoreNetworkingTestConfig(ctx context.Context, f *framework.Framework, ho
 
 func getServiceSelector() map[string]string {
 	ginkgo.By("creating a selector")
-	selectorName := "selector-" + string(uuid.NewUUID())
+	selectorName := "selector-" + string(framework.DummyUUID())
 	serviceSelector := map[string]string{
 		selectorName: "true",
 	}

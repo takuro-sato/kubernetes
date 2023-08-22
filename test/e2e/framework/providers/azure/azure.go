@@ -24,7 +24,6 @@ import (
 	"github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2019-12-01/compute"
 
 	v1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	"k8s.io/legacy-cloud-providers/azure"
 	"k8s.io/legacy-cloud-providers/azure/clients/fileclient"
@@ -65,7 +64,7 @@ func (p *Provider) DeleteNode(node *v1.Node) error {
 
 // CreatePD creates a persistent volume
 func (p *Provider) CreatePD(zone string) (string, error) {
-	pdName := fmt.Sprintf("%s-%s", framework.TestContext.Prefix, string(uuid.NewUUID()))
+	pdName := fmt.Sprintf("%s-%s", framework.TestContext.Prefix, string(framework.DummyUUID()))
 
 	volumeOptions := &azure.ManagedDiskOptions{
 		DiskName:           pdName,
@@ -98,7 +97,7 @@ func (p *Provider) CreateShare() (string, string, string, error) {
 	}
 
 	shareOptions := &fileclient.ShareOptions{
-		Name:       fmt.Sprintf("%s-%s", framework.TestContext.Prefix, string(uuid.NewUUID())),
+		Name:       fmt.Sprintf("%s-%s", framework.TestContext.Prefix, string(framework.DummyUUID())),
 		RequestGiB: 1,
 	}
 

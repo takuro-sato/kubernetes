@@ -28,7 +28,6 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2ekubectl "k8s.io/kubernetes/test/e2e/framework/kubectl"
 	e2epod "k8s.io/kubernetes/test/e2e/framework/pod"
@@ -41,7 +40,7 @@ import (
 )
 
 func scTestPod(hostIPC bool, hostPID bool) *v1.Pod {
-	podName := "security-context-" + string(uuid.NewUUID())
+	podName := "security-context-" + string(framework.DummyUUID())
 	pod := &v1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        podName,

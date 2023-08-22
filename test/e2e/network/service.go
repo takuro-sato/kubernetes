@@ -41,7 +41,6 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/intstr"
 	utilnet "k8s.io/apimachinery/pkg/util/net"
-	utilrand "k8s.io/apimachinery/pkg/util/rand"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apimachinery/pkg/util/wait"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -3325,7 +3324,7 @@ var _ = common.SIGDescribe("Services", func() {
 		svcResource := schema.GroupVersionResource{Group: "", Version: "v1", Resource: "services"}
 		svcClient := f.ClientSet.CoreV1().Services(ns)
 
-		testSvcName := "test-service-" + utilrand.String(5)
+		testSvcName := "test-service-" + framework.DummyUtilrandString(5)
 		testSvcLabels := map[string]string{"test-service-static": "true"}
 		testSvcLabelsFlat := "test-service-static=true"
 
@@ -3563,17 +3562,17 @@ var _ = common.SIGDescribe("Services", func() {
 			port  int
 		}{
 			{
-				name:  "e2e-svc-a-" + utilrand.String(5),
+				name:  "e2e-svc-a-" + framework.DummyUtilrandString(5),
 				label: map[string]string{"e2e-test-service": "delete"},
 				port:  8001,
 			},
 			{
-				name:  "e2e-svc-b-" + utilrand.String(5),
+				name:  "e2e-svc-b-" + framework.DummyUtilrandString(5),
 				label: map[string]string{"e2e-test-service": "delete"},
 				port:  8002,
 			},
 			{
-				name:  "e2e-svc-c-" + utilrand.String(5),
+				name:  "e2e-svc-c-" + framework.DummyUtilrandString(5),
 				label: map[string]string{"e2e-test-service": "keep"},
 				port:  8003,
 			},

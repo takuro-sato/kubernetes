@@ -26,7 +26,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2epod "k8s.io/kubernetes/test/e2e/framework/pod"
 	e2epodoutput "k8s.io/kubernetes/test/e2e/framework/pod/output"
@@ -125,7 +124,7 @@ var _ = SIGDescribe("ConfigMap", func() {
 		podLogTimeout := e2epod.GetPodSecretUpdateTimeout(ctx, f.ClientSet)
 		containerTimeoutArg := fmt.Sprintf("--retry_time=%v", int(podLogTimeout.Seconds()))
 
-		name := "configmap-test-upd-" + string(uuid.NewUUID())
+		name := "configmap-test-upd-" + string(framework.DummyUUID())
 		volumeName := "configmap-volume"
 		volumeMountPath := "/etc/configmap-volume"
 
@@ -176,7 +175,7 @@ var _ = SIGDescribe("ConfigMap", func() {
 		podLogTimeout := e2epod.GetPodSecretUpdateTimeout(ctx, f.ClientSet)
 		containerTimeoutArg := fmt.Sprintf("--retry_time=%v", int(podLogTimeout.Seconds()))
 
-		name := "configmap-test-upd-" + string(uuid.NewUUID())
+		name := "configmap-test-upd-" + string(framework.DummyUUID())
 		volumeName := "configmap-volume"
 		volumeMountPath := "/etc/configmap-volume"
 		containerName := "configmap-volume-binary-test"
@@ -243,7 +242,7 @@ var _ = SIGDescribe("ConfigMap", func() {
 		trueVal := true
 		volumeMountPath := "/etc/configmap-volumes"
 
-		deleteName := "cm-test-opt-del-" + string(uuid.NewUUID())
+		deleteName := "cm-test-opt-del-" + string(framework.DummyUUID())
 		deleteContainerName := "delcm-volume-test"
 		deleteVolumeName := "deletecm-volume"
 		deleteConfigMap := &v1.ConfigMap{
@@ -256,7 +255,7 @@ var _ = SIGDescribe("ConfigMap", func() {
 			},
 		}
 
-		updateName := "cm-test-opt-upd-" + string(uuid.NewUUID())
+		updateName := "cm-test-opt-upd-" + string(framework.DummyUUID())
 		updateContainerName := "updcm-volume-test"
 		updateVolumeName := "updatecm-volume"
 		updateConfigMap := &v1.ConfigMap{
@@ -269,7 +268,7 @@ var _ = SIGDescribe("ConfigMap", func() {
 			},
 		}
 
-		createName := "cm-test-opt-create-" + string(uuid.NewUUID())
+		createName := "cm-test-opt-create-" + string(framework.DummyUUID())
 		createContainerName := "createcm-volume-test"
 		createVolumeName := "createcm-volume"
 		createConfigMap := &v1.ConfigMap{
@@ -295,7 +294,7 @@ var _ = SIGDescribe("ConfigMap", func() {
 
 		pod := &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "pod-configmaps-" + string(uuid.NewUUID()),
+				Name: "pod-configmaps-" + string(framework.DummyUUID()),
 			},
 			Spec: v1.PodSpec{
 				Volumes: []v1.Volume{
@@ -422,7 +421,7 @@ var _ = SIGDescribe("ConfigMap", func() {
 	*/
 	framework.ConformanceIt("should be consumable in multiple volumes in the same pod [NodeConformance]", func(ctx context.Context) {
 		var (
-			name             = "configmap-test-volume-" + string(uuid.NewUUID())
+			name             = "configmap-test-volume-" + string(framework.DummyUUID())
 			volumeName       = "configmap-volume"
 			volumeMountPath  = "/etc/configmap-volume"
 			volumeName2      = "configmap-volume-2"
@@ -438,7 +437,7 @@ var _ = SIGDescribe("ConfigMap", func() {
 
 		pod := &v1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "pod-configmaps-" + string(uuid.NewUUID()),
+				Name: "pod-configmaps-" + string(framework.DummyUUID()),
 			},
 			Spec: v1.PodSpec{
 				Volumes: []v1.Volume{
@@ -590,7 +589,7 @@ func doConfigMapE2EWithoutMappings(ctx context.Context, f *framework.Framework, 
 	groupID := int64(fsGroup)
 
 	var (
-		name            = "configmap-test-volume-" + string(uuid.NewUUID())
+		name            = "configmap-test-volume-" + string(framework.DummyUUID())
 		volumeName      = "configmap-volume"
 		volumeMountPath = "/etc/configmap-volume"
 		configMap       = newConfigMap(f, name)
@@ -631,7 +630,7 @@ func doConfigMapE2EWithMappings(ctx context.Context, f *framework.Framework, asU
 	groupID := int64(fsGroup)
 
 	var (
-		name            = "configmap-test-volume-map-" + string(uuid.NewUUID())
+		name            = "configmap-test-volume-map-" + string(framework.DummyUUID())
 		volumeName      = "configmap-volume"
 		volumeMountPath = "/etc/configmap-volume"
 		configMap       = newConfigMap(f, name)
@@ -684,7 +683,7 @@ func createNonOptionalConfigMapPod(ctx context.Context, f *framework.Framework, 
 	containerTimeoutArg := fmt.Sprintf("--retry_time=%v", int(podLogTimeout.Seconds()))
 	falseValue := false
 
-	createName := "cm-test-opt-create-" + string(uuid.NewUUID())
+	createName := "cm-test-opt-create-" + string(framework.DummyUUID())
 	createVolumeName := "createcm-volume"
 
 	// creating a pod without configMap object created, by mentioning the configMap volume source's local reference name
@@ -702,7 +701,7 @@ func createNonOptionalConfigMapPodWithConfig(ctx context.Context, f *framework.F
 	containerTimeoutArg := fmt.Sprintf("--retry_time=%v", int(podLogTimeout.Seconds()))
 	falseValue := false
 
-	createName := "cm-test-opt-create-" + string(uuid.NewUUID())
+	createName := "cm-test-opt-create-" + string(framework.DummyUUID())
 	createVolumeName := "createcm-volume"
 	configMap := newConfigMap(f, createName)
 
@@ -740,7 +739,7 @@ func createConfigMapVolumeMounttestPod(namespace, volumeName, referenceName, mou
 			},
 		},
 	}
-	podName := "pod-configmaps-" + string(uuid.NewUUID())
+	podName := "pod-configmaps-" + string(framework.DummyUUID())
 	mounttestArgs = append([]string{"mounttest"}, mounttestArgs...)
 	pod := e2epod.NewAgnhostPod(namespace, podName, volumes, createMounts(volumeName, mountPath, true), nil, mounttestArgs...)
 	pod.Spec.RestartPolicy = v1.RestartPolicyNever

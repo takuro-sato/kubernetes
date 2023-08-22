@@ -43,6 +43,7 @@ func getCmd(env Getenver, w io.Writer) *exec.Cmd {
 		"--focus=" + env.Getenv(focusEnvKey),
 		"--skip=" + skip,
 		"--noColor=true",
+		"--seed=17",
 	}...)
 
 	extraArgs := []string{

@@ -19,6 +19,8 @@ package framework
 import (
 	"bytes"
 	"context"
+	"crypto/md5"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -27,6 +29,8 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"regexp"
+	"runtime/debug"
 	"strconv"
 	"strings"
 	"sync"
@@ -41,8 +45,8 @@ import (
 	"k8s.io/apimachinery/pkg/fields"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/dynamic"
@@ -143,7 +147,7 @@ var (
 
 // RunID is a unique identifier of the e2e run.
 // Beware that this ID is not the same for all tests in the e2e run, because each Ginkgo node creates it separately.
-var RunID = uuid.NewUUID()
+var RunID = DummyUUID()
 
 // CreateTestingNSFn is a func that is responsible for creating namespace used for executing e2e tests.
 type CreateTestingNSFn func(ctx context.Context, baseName string, c clientset.Interface, labels map[string]string) (*v1.Namespace, error)
@@ -339,7 +343,7 @@ func CreateTestingNS(ctx context.Context, baseName string, c clientset.Interface
 	// We don't use ObjectMeta.GenerateName feature, as in case of API call
 	// failure we don't know whether the namespace was created and what is its
 	// name.
-	name := fmt.Sprintf("%v-%v", baseName, RandomSuffix())
+	name := fmt.Sprintf("%v-%v", baseName, DeterministicNsSuffix(baseName))
 
 	namespaceObj := &v1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
@@ -358,7 +362,7 @@ func CreateTestingNS(ctx context.Context, baseName string, c clientset.Interface
 			if apierrors.IsAlreadyExists(err) {
 				// regenerate on conflict
 				Logf("Namespace name %q was already taken, generate a new name and retry", namespaceObj.Name)
-				namespaceObj.Name = fmt.Sprintf("%v-%v", baseName, RandomSuffix())
+				namespaceObj.Name = fmt.Sprintf("%v-%v", baseName, DeterministicNsSuffix(baseName))
 			} else {
 				Logf("Unexpected error while creating namespace: %v", err)
 			}
@@ -755,4 +759,91 @@ retriesLoop:
 		ExpectEqual(totalValidWatchEvents, len(expectedWatchEvents), "Error: there must be an equal amount of total valid watch events (%d) and expected watch events (%d)", totalValidWatchEvents, len(expectedWatchEvents))
 		break retriesLoop
 	}
+}
+
+type Counter struct {
+	counters map[string]int
+	mutex    sync.Mutex
+}
+
+func NewCounter() *Counter {
+	return &Counter{
+		counters: make(map[string]int),
+	}
+}
+
+func (cm *Counter) Increment(name string) int {
+	cm.mutex.Lock()
+	defer cm.mutex.Unlock()
+
+	cm.counters[name]++
+	return cm.counters[name]
+}
+
+var counterObj = NewCounter()
+
+// It returns an integer incrementing starting from 1 for each `val` value.
+// example:
+// valueCounter("abc") -> 1
+// valueCounter("efg") -> 1
+// valueCounter("abc") -> 2
+// valueCounter("abc") -> 3
+func valueCounter(val string) int {
+	return counterObj.Increment(val)
+}
+
+func getMD5Hash(text string) string {
+	hasher := md5.New()
+	hasher.Write([]byte(text))
+	hash := hasher.Sum(nil)
+	return hex.EncodeToString(hash)
+}
+
+func getFileLineNumbers(stackTrace string) string {
+	re := regexp.MustCompile(`\b(\w+\.go:\d+)\b`)
+	matches := re.FindAllString(stackTrace, -1)
+	return strings.Join(matches, ",")
+}
+
+func DummyUUID() types.UID {
+	stackTrace := string(debug.Stack())
+	// stack trace can be non deterministic
+	fileAndLines := getFileLineNumbers(stackTrace)
+	// Maybe there is a better way than to use MD5 as UUID, but we are doing it because it's easy.
+	hash := getMD5Hash(fileAndLines)
+	// format of 02c84665-0791-4aee-be0c-c48adcecfe15
+	// valueCounter hanldes the case where a same stack trace calls this function multiple times (Like inside a for loop).
+	strUUID := fmt.Sprintf("%s-%s-%s-%s-%012d", hash[0:8], hash[8:12], hash[12:16], hash[16:20], valueCounter(hash))
+	fmt.Printf("\n[MYLOG] fileAndLines:%s, strUUID:%s\n", fileAndLines, strUUID)
+	return types.UID(strUUID)
+}
+
+var nsSuffixCounter = NewCounter()
+
+func DeterministicNsSuffix(prefix string) string {
+	return strconv.Itoa(nsSuffixCounter.Increment(prefix))
+}
+
+// Represents an interger val in n digit.
+// n sould be large enough.
+func representIntInNDigit(val int, n int) string {
+	intStr := fmt.Sprintf("%d", val)
+	if len(intStr) > n {
+		intStr = intStr[:n]
+	}
+	padding := strings.Repeat("0", n-len(intStr))
+	return padding + intStr
+}
+
+// Dummy deterministic version of String() function in "k8s.io/apimachinery/pkg/util/rand".
+// It only returns strings with numbers for simplicity.
+// The number will be less diverse, but it should be fine for the purpose of making test deterministic.
+func DummyUtilrandString(n int) string {
+	stackTrace := string(debug.Stack())
+	// stack trace can be non deterministic
+	fileAndLines := getFileLineNumbers(stackTrace)
+	// Maybe there is a better way than to use MD5 as UUID, but it's what we do now.
+	hash := getMD5Hash(fileAndLines)
+
+	return representIntInNDigit(valueCounter(hash), n)
 }

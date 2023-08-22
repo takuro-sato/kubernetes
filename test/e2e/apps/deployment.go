@@ -41,7 +41,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	utilrand "k8s.io/apimachinery/pkg/util/rand"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/dynamic"
@@ -484,7 +483,7 @@ var _ = SIGDescribe("Deployment", func() {
 	*/
 	framework.ConformanceIt("should validate Deployment Status endpoints", func(ctx context.Context) {
 		dClient := c.AppsV1().Deployments(ns)
-		dName := "test-deployment-" + utilrand.String(5)
+		dName := "test-deployment-" + framework.DummyUtilrandString(5)
 		labelSelector := "e2e=testing"
 
 		w := &cache.ListWatch{

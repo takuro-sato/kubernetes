@@ -33,7 +33,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/diff"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/apiserver/pkg/storage/names"
 	"k8s.io/client-go/dynamic"
@@ -90,7 +89,7 @@ var _ = SIGDescribe("CustomResourceDefinition resources [Privileged:ClusterAdmin
 			framework.ExpectNoError(err, "initializing apiExtensionClient")
 
 			// Label the CRDs we create so we can list only them even though they are cluster scoped
-			testUUID := string(uuid.NewUUID())
+			testUUID := string(framework.DummyUUID())
 
 			// Create CRD and wait for the resource to be recognized and available.
 			crds := make([]*v1.CustomResourceDefinition, testListSize)

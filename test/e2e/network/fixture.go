@@ -23,9 +23,9 @@ import (
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/util/retry"
+	"k8s.io/kubernetes/test/e2e/framework"
 	imageutils "k8s.io/kubernetes/test/utils/image"
 
 	"github.com/onsi/ginkgo/v2"
@@ -52,7 +52,7 @@ func NewServerTest(client clientset.Interface, namespace string, serviceName str
 	t.Client = client
 	t.Namespace = namespace
 	t.ServiceName = serviceName
-	t.TestID = t.ServiceName + "-" + string(uuid.NewUUID())
+	t.TestID = t.ServiceName + "-" + string(framework.DummyUUID())
 	t.Labels = map[string]string{
 		"testid": t.TestID,
 	}

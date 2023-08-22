@@ -54,7 +54,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2ekubectl "k8s.io/kubernetes/test/e2e/framework/kubectl"
@@ -206,7 +205,7 @@ var _ = SIGDescribe("[Feature:Windows] GMSA Full [Serial] [Slow]", func() {
 			gmsaDomainIP := getGmsaDomainIP(f, podName)
 
 			ginkgo.By("checking that file can be read and write from the remote folder successfully")
-			filePath := fmt.Sprintf("\\\\%s\\%s\\write-test-%s.txt", gmsaDomainIP, gmsaSharedFolder, string(uuid.NewUUID())[0:4])
+			filePath := fmt.Sprintf("\\\\%s\\%s\\write-test-%s.txt", gmsaDomainIP, gmsaSharedFolder, string(framework.DummyUUID())[0:4])
 			gomega.Eventually(ctx, func() bool {
 				// The filePath is a remote folder, do not change the format of it
 				_, _ = runKubectlExecInNamespace(f.Namespace.Name, podName, "--", "powershell.exe", "-Command", "echo 'This is a test file.' > "+filePath)
@@ -437,7 +436,7 @@ func createRBACRoleForGmsa(ctx context.Context, f *framework.Framework) (string,
 
 // createServiceAccount creates a service account, and returns its name.
 func createServiceAccount(ctx context.Context, f *framework.Framework) string {
-	accountName := f.Namespace.Name + "-sa-" + string(uuid.NewUUID())
+	accountName := f.Namespace.Name + "-sa-" + string(framework.DummyUUID())
 	account := &v1.ServiceAccount{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      accountName,

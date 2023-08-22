@@ -25,7 +25,6 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	"k8s.io/kubernetes/test/e2e/framework"
 	e2epod "k8s.io/kubernetes/test/e2e/framework/pod"
 	admissionapi "k8s.io/pod-security-admission/api"
@@ -42,7 +41,7 @@ var _ = SIGDescribe("Kubelet", func() {
 		podClient = e2epod.NewPodClient(f)
 	})
 	ginkgo.Context("when scheduling a busybox command in a pod", func() {
-		podName := "busybox-scheduling-" + string(uuid.NewUUID())
+		podName := "busybox-scheduling-" + string(framework.DummyUUID())
 
 		/*
 			Release: v1.13
@@ -83,7 +82,7 @@ var _ = SIGDescribe("Kubelet", func() {
 		var podName string
 
 		ginkgo.BeforeEach(func(ctx context.Context) {
-			podName = "bin-false" + string(uuid.NewUUID())
+			podName = "bin-false" + string(framework.DummyUUID())
 			podClient.Create(ctx, &v1.Pod{
 				ObjectMeta: metav1.ObjectMeta{
 					Name: podName,
@@ -138,7 +137,7 @@ var _ = SIGDescribe("Kubelet", func() {
 		})
 	})
 	ginkgo.Context("when scheduling an agnhost Pod with hostAliases", func() {
-		podName := "agnhost-host-aliases" + string(uuid.NewUUID())
+		podName := "agnhost-host-aliases" + string(framework.DummyUUID())
 
 		/*
 			Release: v1.13
@@ -173,7 +172,7 @@ var _ = SIGDescribe("Kubelet", func() {
 		})
 	})
 	ginkgo.Context("when scheduling a read only busybox container", func() {
-		podName := "busybox-readonly-fs" + string(uuid.NewUUID())
+		podName := "busybox-readonly-fs" + string(framework.DummyUUID())
 
 		/*
 			Release: v1.13

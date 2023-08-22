@@ -26,7 +26,6 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/uuid"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/kubectl/pkg/cmd/util/podcmd"
 	"k8s.io/kubernetes/test/e2e/framework"
@@ -163,7 +162,7 @@ var _ = SIGDescribe("Kubectl logs", func() {
 	ginkgo.Describe("default container logs", func() {
 		ginkgo.Describe("the second container is the default-container by annotation", func() {
 			var pod *v1.Pod
-			podName := "pod" + string(uuid.NewUUID())
+			podName := "pod" + string(framework.DummyUUID())
 			defaultContainerName := "container-2"
 			ginkgo.BeforeEach(func(ctx context.Context) {
 				podClient := f.ClientSet.CoreV1().Pods(ns)
