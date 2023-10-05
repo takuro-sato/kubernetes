@@ -945,6 +945,22 @@ func (r *Request) request(ctx context.Context, fn func(*http.Request, *http.Resp
 		metrics.RequestLatency.Observe(ctx, r.verb, r.finalURLTemplate(), time.Since(start))
 	}()
 
+	// Both GetLogs() and c.CoreV1().RESTClient().Get().Resource("pods").Namespace(namespace).Name(podName).SubResource("log")
+	// using this `request()` function.
+	// They can be captured here.
+
+	// Here we can get the `kubectl logs`
+	if r.subresource == "log" {
+		// Write down log
+		// We don't care container name here because we cant' specify container
+		// when using ReadStreamRequest because it's pod wide configuration.
+		fmt.Printf("LOG_REQUEST_HISTORY::::%s::::%s", r.namespace, r.resourceName /*pod name*/)
+
+		// We can use this log in a similar way as the following in this hacked kubernetes.
+		// (Search `fmt.Printf("\nTEST_TO_NS::::%s::::%s\n", testName, ns.Name)` in this repo.
+		// This is used to create a look up table between namespace and test name)
+	}
+
 	if r.err != nil {
 		klog.V(4).Infof("Error in request: %v", r.err)
 		return r.err

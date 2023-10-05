@@ -111,7 +111,7 @@ var _ = SIGDescribe("Kubectl logs", func() {
 				'kubectl --since=24h' should output logs that are only 1 day older from now
 		*/
 		framework.ConformanceIt("should be able to retrieve and filter logs ", func(ctx context.Context) {
-
+			// [TODO] If `kubectl logs` is called directly, we need to log it as well.
 			ginkgo.By("Waiting for log generator to start.")
 			if !e2epod.CheckPodsRunningReadyOrSucceeded(ctx, c, ns, []string{podName}, framework.PodStartTimeout) {
 				framework.Failf("Pod %s was not ready", podName)
