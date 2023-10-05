@@ -67,6 +67,7 @@ var _ = SIGDescribe("Kubelet", func() {
 			})
 			gomega.Eventually(ctx, func() string {
 				sinceTime := metav1.NewTime(time.Now().Add(time.Duration(-1 * time.Hour)))
+				// [memo] this is one common way to call call log api.
 				rc, err := podClient.GetLogs(podName, &v1.PodLogOptions{SinceTime: &sinceTime}).Stream(ctx)
 				if err != nil {
 					return ""

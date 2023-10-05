@@ -100,6 +100,7 @@ func (tk *TestKubeconfig) KubectlCmd(args ...string) *exec.Cmd {
 }
 
 // LogFailedContainers runs `kubectl logs` on a failed containers.
+// [TODO] If `kubectl logs` is called directly, we need to log it as well.
 func LogFailedContainers(ctx context.Context, c clientset.Interface, ns string, logFunc func(ftm string, args ...interface{})) {
 	podList, err := c.CoreV1().Pods(ns).List(ctx, metav1.ListOptions{})
 	if err != nil {

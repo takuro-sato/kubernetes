@@ -455,6 +455,7 @@ func GetPreviousPodLogs(ctx context.Context, c clientset.Interface, namespace, p
 
 // utility function for gomega Eventually
 func getPodLogsInternal(ctx context.Context, c clientset.Interface, namespace, podName, containerName string, previous bool, sinceTime *metav1.Time, tailLines *int) (string, error) {
+	// [memo] this is one common way to call call log api.
 	request := c.CoreV1().RESTClient().Get().
 		Resource("pods").
 		Namespace(namespace).
